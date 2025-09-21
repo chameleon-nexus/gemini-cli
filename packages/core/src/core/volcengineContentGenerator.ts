@@ -58,7 +58,9 @@ interface VolcengineResponse {
  */
 export class VolcengineContentGenerator implements ContentGenerator {
   private readonly baseUrl = process.env['VOLCENGINE_BASE_URL'] || 'https://ark.cn-beijing.volces.com/api/v3';
-  private readonly apiKey = process.env['VOLCENGINE_API_KEY'] || process.env['GEMINI_API_KEY'] || 'ad5769eb-526c-4067-b986-4f4f6224e8b5';
+  private readonly apiKey = process.env['VOLCENGINE_API_KEY'] || process.env['GEMINI_API_KEY'] || (() => {
+    throw new Error('API key not found. Please set VOLCENGINE_API_KEY or GEMINI_API_KEY environment variable.');
+  })();
   private readonly model = process.env['VOLCENGINE_MODEL'] || 'deepseek-v3-250324';
 
   constructor() {}

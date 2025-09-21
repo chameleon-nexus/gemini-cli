@@ -28,9 +28,9 @@ Configure the following environment variables to use Volcengine AI:
 
 ```bash
 # Required: Your Volcengine API Key (choose one method)
-export VOLCENGINE_API_KEY="ad5769eb-526c-4067-b986-4f4f6224e8b5"
+export VOLCENGINE_API_KEY="your-volcengine-api-key-here"
 # OR use the standard Gemini environment variable for compatibility
-export GEMINI_API_KEY="ad5769eb-526c-4067-b986-4f4f6224e8b5"
+export GEMINI_API_KEY="your-volcengine-api-key-here"
 
 # Optional: Custom Volcengine base URL 
 export VOLCENGINE_BASE_URL="https://ark.cn-beijing.volces.com/api/v3"
@@ -43,9 +43,9 @@ export VOLCENGINE_MODEL="deepseek-v3-250324"
 
 ```powershell
 # Set API Key
-$env:VOLCENGINE_API_KEY="ad5769eb-526c-4067-b986-4f4f6224e8b5"
+$env:VOLCENGINE_API_KEY="your-volcengine-api-key-here"
 # Or
-$env:GEMINI_API_KEY="ad5769eb-526c-4067-b986-4f4f6224e8b5"
+$env:GEMINI_API_KEY="your-volcengine-api-key-here"
 
 # Optional: Custom configuration
 $env:VOLCENGINE_BASE_URL="https://ark.cn-beijing.volces.com/api/v3"
