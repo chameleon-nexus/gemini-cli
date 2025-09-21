@@ -1,0 +1,19 @@
+Gemini Volcengine CLI
+Copyright 2025 Chameleon Nexus Tech
+
+This product is a modified version of Google Gemini CLI.
+
+This product contains software developed by Google LLC.
+Original work: Google Gemini CLI
+Copyright 2025 Google LLC
+Licensed under the Apache License, Version 2.0
+
+The original software can be found at:
+https://github.com/google-gemini/gemini-cli
+
+Modifications made by Chameleon Nexus Tech:
+- Replaced Google Gemini API calls with Volcengine AI API calls
+- Added Volcengine API adapter and format conversion
+- Modified content generator to use Volcengine instead of Google services
+
+All modifications are licensed under the Apache License, Version 2.0.

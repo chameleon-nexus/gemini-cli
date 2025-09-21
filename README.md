@@ -1,320 +1,203 @@
-# Gemini CLI
+# Gemini CLI (Chameleon Nexus Tech Edition)
 
-[![Gemini CLI CI](https://github.com/google-gemini/gemini-cli/actions/workflows/ci.yml/badge.svg)](https://github.com/google-gemini/gemini-cli/actions/workflows/ci.yml)
-[![Gemini CLI E2E](https://github.com/google-gemini/gemini-cli/actions/workflows/e2e.yml/badge.svg)](https://github.com/google-gemini/gemini-cli/actions/workflows/e2e.yml)
-[![Version](https://img.shields.io/npm/v/@google/gemini-cli)](https://www.npmjs.com/package/@google/gemini-cli)
-[![License](https://img.shields.io/github/license/google-gemini/gemini-cli)](https://github.com/google-gemini/gemini-cli/blob/main/LICENSE)
+[![npm version](https://badge.fury.io/js/%40chameleon-nexus-tech%2Fgemini-cli.svg)](https://badge.fury.io/js/%40chameleon-nexus-tech%2Fgemini-cli)
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
-![Gemini CLI Screenshot](./docs/assets/gemini-screenshot.png)
+**A customized version of Gemini CLI that uses Volcengine AI instead of Google Gemini API**
 
-Gemini CLI is an open-source AI agent that brings the power of Gemini directly into your terminal. It provides lightweight access to Gemini, giving you the most direct path from your prompt to our model.
+> ⚠️ **Important Notice**: This is a modified version of [Google Gemini CLI](https://github.com/google-gemini/gemini-cli). Original project copyright belongs to Google LLC under Apache 2.0 License.
 
-## 🚀 Why Gemini CLI?
+## 🚀 Features
 
-- **🎯 Free tier**: 60 requests/min and 1,000 requests/day with personal Google account
-- **🧠 Powerful Gemini 2.5 Pro**: Access to 1M token context window
-- **🔧 Built-in tools**: Google Search grounding, file operations, shell commands, web fetching
-- **🔌 Extensible**: MCP (Model Context Protocol) support for custom integrations
-- **💻 Terminal-first**: Designed for developers who live in the command line
-- **🛡️ Open source**: Apache 2.0 licensed
+- ✅ **Full Compatibility**: Maintains all original Gemini CLI functionality and interface
+- ✅ **Volcengine Integration**: Automatically routes all requests to Volcengine AI  
+- ✅ **Chinese Optimized**: Optimized for Chinese conversations
+- ✅ **Seamless Replacement**: Drop-in replacement with no usage changes required
 
 ## 📦 Installation
 
-### Quick Install
-
-#### Run instantly with npx
-
 ```bash
-# Using npx (no installation required)
-npx https://github.com/google-gemini/gemini-cli
+npm install -g @chameleon-nexus-tech/gemini-cli
 ```
 
-#### Install globally with npm
+## 🔧 Configuration
+
+### Environment Variables
+
+Configure the following environment variables to use Volcengine AI:
 
 ```bash
-npm install -g @google/gemini-cli
+# Required: Your Volcengine API Key (choose one method)
+export VOLCENGINE_API_KEY="ad5769eb-526c-4067-b986-4f4f6224e8b5"
+# OR use the standard Gemini environment variable for compatibility
+export GEMINI_API_KEY="ad5769eb-526c-4067-b986-4f4f6224e8b5"
+
+# Optional: Custom Volcengine base URL 
+export VOLCENGINE_BASE_URL="https://ark.cn-beijing.volces.com/api/v3"
+
+# Optional: Custom model selection
+export VOLCENGINE_MODEL="deepseek-v3-250324"
 ```
 
-#### Install globally with Homebrew (macOS/Linux)
+### Windows PowerShell Configuration
+
+```powershell
+# Set API Key
+$env:VOLCENGINE_API_KEY="ad5769eb-526c-4067-b986-4f4f6224e8b5"
+# Or
+$env:GEMINI_API_KEY="ad5769eb-526c-4067-b986-4f4f6224e8b5"
+
+# Optional: Custom configuration
+$env:VOLCENGINE_BASE_URL="https://ark.cn-beijing.volces.com/api/v3"
+$env:VOLCENGINE_MODEL="deepseek-v3-250324"
+```
+
+### Environment Variable Priority
+
+The system checks for API keys in this order:
+1. `VOLCENGINE_API_KEY` (highest priority)
+2. `GEMINI_API_KEY` (fallback for compatibility)
+3. Hardcoded fallback key (for testing)
+
+### Default Configuration
+
+- **API Endpoint**: `https://ark.cn-beijing.volces.com/api/v3` (Volcengine Beijing)
+- **Default Model**: `deepseek-v3-250324` (DeepSeek V3)
+- **Timeout**: 30 seconds for API calls
+- **Authentication**: Environment variable based
+
+## 🚀 Usage
+
+### Direct Question Mode
 
 ```bash
-brew install gemini-cli
+gemini "Hello, please introduce yourself"
 ```
 
-#### System Requirements
-
-- Node.js version 20 or higher
-- macOS, Linux, or Windows
-
-## Release Cadence and Tags
-
-See [Releases](./docs/releases.md) for more details.
-
-### Preview
-
-New preview releases will be published each week at UTC 2359 on Tuesdays. These releases will not have been fully vetted and may contain regressions or other outstanding issues. Please help us test and install with `preview` tag.
-
-```bash
-npm install -g @google/gemini-cli@preview
-```
-
-### Stable
-
-- New stable releases will be published each week at UTC 2000 on Tuesdays, this will be the full promotion of last week's `preview` release + any bug fixes and validations. Use `latest` tag.
-
-```bash
-npm install -g @google/gemini-cli@latest
-```
-
-### Nightly
-
-- New releases will be published each week at UTC 0000 each day, This will be all changes from the main branch as represented at time of release. It should be assumed there are pending validations and issues. Use `nightly` tag.
-
-```bash
-npm install -g @google/gemini-cli@nightly
-```
-
-## 📋 Key Features
-
-### Code Understanding & Generation
-
-- Query and edit large codebases
-- Generate new apps from PDFs, images, or sketches using multimodal capabilities
-- Debug issues and troubleshoot with natural language
-
-### Automation & Integration
-
-- Automate operational tasks like querying pull requests or handling complex rebases
-- Use MCP servers to connect new capabilities, including [media generation with Imagen, Veo or Lyria](https://github.com/GoogleCloudPlatform/vertex-ai-creative-studio/tree/main/experiments/mcp-genmedia)
-- Run non-interactively in scripts for workflow automation
-
-### Advanced Capabilities
-
-- Ground your queries with built-in [Google Search](https://ai.google.dev/gemini-api/docs/grounding) for real-time information
-- Conversation checkpointing to save and resume complex sessions
-- Custom context files (GEMINI.md) to tailor behavior for your projects
-
-### GitHub Integration
-
-Integrate Gemini CLI directly into your GitHub workflows with [**Gemini CLI GitHub Action**](https://github.com/google-github-actions/run-gemini-cli):
-
-- **Pull Request Reviews**: Automated code review with contextual feedback and suggestions
-- **Issue Triage**: Automated labeling and prioritization of GitHub issues based on content analysis
-- **On-demand Assistance**: Mention `@gemini-cli` in issues and pull requests for help with debugging, explanations, or task delegation
-- **Custom Workflows**: Build automated, scheduled and on-demand workflows tailored to your team's needs
-
-## 🔐 Authentication Options
-
-Choose the authentication method that best fits your needs:
-
-### Option 1: Login with Google (OAuth login using your Google Account)
-
-**✨ Best for:** Individual developers as well as anyone who has a Gemini Code Assist License. (see [quota limits and terms of service](https://cloud.google.com/gemini/docs/quotas) for details)
-
-**Benefits:**
-
-- **Free tier**: 60 requests/min and 1,000 requests/day
-- **Gemini 2.5 Pro** with 1M token context window
-- **No API key management** - just sign in with your Google account
-- **Automatic updates** to latest models
-
-#### Start Gemini CLI, then choose _Login with Google_ and follow the browser authentication flow when prompted
+### Interactive Mode
 
 ```bash
 gemini
 ```
 
-#### If you are using a paid Code Assist License from your organization, remember to set the Google Cloud Project
+Then select "2. Use Gemini API Key" and press Enter to start chatting.
 
-```bash
-# Set your Google Cloud Project
-export GOOGLE_CLOUD_PROJECT="YOUR_PROJECT_NAME"
-gemini
-```
+## 🔧 Technical Implementation
 
-### Option 2: Gemini API Key
+### Core Features Implemented
 
-**✨ Best for:** Developers who need specific model control or paid tier access
+✅ **Complete API Replacement**: All Google Gemini API calls redirected to Volcengine AI  
+✅ **Environment Variable Support**: Flexible configuration via multiple environment variables  
+✅ **Format Translation**: Seamless conversion between Gemini and Volcengine API formats  
+✅ **Streaming Compatibility**: Maintains original streaming response behavior  
+✅ **Error Handling**: Robust error handling with 30-second timeout protection  
+✅ **Authentication Fallback**: Multiple API key sources with priority system  
+✅ **Model Flexibility**: Configurable model selection (defaults to DeepSeek V3)  
 
-**Benefits:**
+### Modified Files
 
-- **Free tier**: 100 requests/day with Gemini 2.5 Pro
-- **Model selection**: Choose specific Gemini models
-- **Usage-based billing**: Upgrade for higher limits when needed
+1. **`packages/core/src/core/contentGenerator.ts`**
+   - Modified `createContentGenerator()` to instantiate `VolcengineContentGenerator`
+   - Added conditional logic for `AuthType.USE_GEMINI` and `AuthType.USE_VERTEX_AI`
+   - Maintained full compatibility with original authentication flow
 
-```bash
-# Get your key from https://aistudio.google.com/apikey
-export GEMINI_API_KEY="YOUR_API_KEY"
-gemini
-```
+2. **`packages/core/src/core/volcengineContentGenerator.ts`** *(NEW FILE)*
+   - Implements `ContentGenerator` interface for Volcengine AI
+   - Handles request/response format conversion
+   - Manages environment variable configuration
+   - Provides streaming response simulation
+   - Includes comprehensive error handling
 
-### Option 3: Vertex AI
+### API Format Conversion Details
 
-**✨ Best for:** Enterprise teams and production workloads
+**Request Translation**:
+- Converts Gemini `Content[]` format to Volcengine message format
+- Maps roles: `user` → `user`, `model` → `assistant`
+- Extracts text content from Gemini parts array
+- Applies generation config (temperature, topP, maxTokens)
 
-**Benefits:**
+**Response Mapping**:
+- Transforms Volcengine completion to Gemini candidate format
+- Maps finish reasons and safety ratings
+- Preserves token usage metadata
+- Maintains compatibility with original response structure
 
-- **Enterprise features**: Advanced security and compliance
-- **Scalable**: Higher rate limits with billing account
-- **Integration**: Works with existing Google Cloud infrastructure
+**Configuration Management**:
+- Environment variable precedence system
+- Automatic fallback to hardcoded values for testing
+- Support for custom endpoints and models
+- Cross-platform compatibility (Linux/macOS/Windows)
 
-```bash
-# Get your key from Google Cloud Console
-export GOOGLE_API_KEY="YOUR_API_KEY"
-export GOOGLE_GENAI_USE_VERTEXAI=true
-gemini
-```
+## 📋 License Compliance
 
-For Google Workspace accounts and other authentication methods, see the [authentication guide](./docs/cli/authentication.md).
+This project is based on [Google Gemini CLI](https://github.com/google-gemini/gemini-cli) and follows Apache 2.0 License requirements:
 
-## 🚀 Getting Started
+### Original Project Information
 
-### Basic Usage
+- **Original Project**: Google Gemini CLI
+- **Original Copyright**: Copyright 2025 Google LLC
+- **Original License**: Apache License 2.0
+- **Original Repository**: https://github.com/google-gemini/gemini-cli
 
-#### Start in current directory
+### Modification Statement
 
-```bash
-gemini
-```
+In accordance with Apache 2.0 License Section 4:
 
-#### Include multiple directories
+- ✅ Retained original Apache 2.0 license
+- ✅ Retained original copyright notices
+- ✅ Clearly marked modifications
+- ✅ Included complete license text
 
-```bash
-gemini --include-directories ../lib,../docs
-```
+### Detailed Modifications
 
-#### Use specific model
+The following files were modified to redirect API calls from Google Gemini to Volcengine AI:
 
-```bash
-gemini -m gemini-2.5-flash
-```
+1. **Content Generator Logic** (`packages/core/src/core/contentGenerator.ts`)
+   - Modified `createContentGenerator` function to instantiate `VolcengineContentGenerator` instead of `GoogleGenAI`
+   - Added conditional logic to use Volcengine for both `AuthType.USE_GEMINI` and `AuthType.USE_VERTEX_AI`
 
-#### Non-interactive mode for scripts
+2. **Volcengine Adapter** (`packages/core/src/core/volcengineContentGenerator.ts`) - **NEW FILE**
+   - Implemented `ContentGenerator` interface for Volcengine AI
+   - Added request/response format conversion between Gemini and Volcengine APIs
+   - Implemented streaming simulation for compatibility
+   - Added proper error handling and timeout management
 
-Get a simple text response:
+## 🔄 Migration from Original Gemini CLI
 
-```bash
-gemini -p "Explain the architecture of this codebase"
-```
+If you're migrating from the original Google Gemini CLI:
 
-For more advanced scripting, including how to parse JSON and handle errors, use
-the `--output-format json` flag to get structured output:
+1. **Uninstall original**: `npm uninstall -g @google/gemini-cli`
+2. **Install this version**: `npm install -g @chameleon-nexus-tech/gemini-cli`
+3. **Set API key**: `export VOLCENGINE_API_KEY="your-key"`
+4. **Use as before**: All commands remain the same
 
-```bash
-gemini -p "Explain the architecture of this codebase" --output-format json
-```
+## 🔗 Related Links
 
-### Quick Examples
+- [Original Project (Google Gemini CLI)](https://github.com/google-gemini/gemini-cli)
+- [Volcengine AI Platform](https://www.volcengine.com/products/ai)
+- [Apache 2.0 License](https://www.apache.org/licenses/LICENSE-2.0)
 
-#### Start a new project
+## 🐛 Issue Reporting
 
-```bash
-cd new-project/
-gemini
-> Write me a Discord bot that answers questions using a FAQ.md file I will provide
-```
-
-#### Analyze existing code
-
-```bash
-git clone https://github.com/google-gemini/gemini-cli
-cd gemini-cli
-gemini
-> Give me a summary of all of the changes that went in yesterday
-```
-
-## 📚 Documentation
-
-### Getting Started
-
-- [**Quickstart Guide**](./docs/cli/index.md) - Get up and running quickly
-- [**Authentication Setup**](./docs/cli/authentication.md) - Detailed auth configuration
-- [**Configuration Guide**](./docs/cli/configuration.md) - Settings and customization
-- [**Keyboard Shortcuts**](./docs/keyboard-shortcuts.md) - Productivity tips
-
-### Core Features
-
-- [**Commands Reference**](./docs/cli/commands.md) - All slash commands (`/help`, `/chat`, `/mcp`, etc.)
-- [**Checkpointing**](./docs/checkpointing.md) - Save and resume conversations
-- [**Memory Management**](./docs/tools/memory.md) - Using GEMINI.md context files
-- [**Token Caching**](./docs/cli/token-caching.md) - Optimize token usage
-
-### Tools & Extensions
-
-- [**Built-in Tools Overview**](./docs/tools/index.md)
-  - [File System Operations](./docs/tools/file-system.md)
-  - [Shell Commands](./docs/tools/shell.md)
-  - [Web Fetch & Search](./docs/tools/web-fetch.md)
-  - [Multi-file Operations](./docs/tools/multi-file.md)
-- [**MCP Server Integration**](./docs/tools/mcp-server.md) - Extend with custom tools
-- [**Custom Extensions**](./docs/extension.md) - Build your own commands
-
-### Advanced Topics
-
-- [**Architecture Overview**](./docs/architecture.md) - How Gemini CLI works
-- [**IDE Integration**](./docs/ide-integration.md) - VS Code companion
-- [**Sandboxing & Security**](./docs/sandbox.md) - Safe execution environments
-- [**Enterprise Deployment**](./docs/deployment.md) - Docker, system-wide config
-- [**Telemetry & Monitoring**](./docs/telemetry.md) - Usage tracking
-- [**Tools API Development**](./docs/core/tools-api.md) - Create custom tools
-
-### Configuration & Customization
-
-- [**Settings Reference**](./docs/cli/configuration.md) - All configuration options
-- [**Theme Customization**](./docs/cli/themes.md) - Visual customization
-- [**.gemini Directory**](./docs/gemini-ignore.md) - Project-specific settings
-- [**Environment Variables**](./docs/cli/configuration.md#environment-variables)
-
-### Troubleshooting & Support
-
-- [**Troubleshooting Guide**](./docs/troubleshooting.md) - Common issues and solutions
-- [**FAQ**](./docs/troubleshooting.md#frequently-asked-questions) - Quick answers
-- Use `/bug` command to report issues directly from the CLI
-
-### Using MCP Servers
-
-Configure MCP servers in `~/.gemini/settings.json` to extend Gemini CLI with custom tools:
-
-```text
-> @github List my open pull requests
-> @slack Send a summary of today's commits to #dev channel
-> @database Run a query to find inactive users
-```
-
-See the [MCP Server Integration guide](./docs/tools/mcp-server.md) for setup instructions.
+If you encounter any issues, please report them on [GitHub Issues](https://github.com/chameleon-nexus/gemini-cli/issues).
 
 ## 🤝 Contributing
 
-We welcome contributions! Gemini CLI is fully open source (Apache 2.0), and we encourage the community to:
+Contributions are welcome! Please ensure:
 
-- Report bugs and suggest features
-- Improve documentation
-- Submit code improvements
-- Share your MCP servers and extensions
+1. Follow the original project's code style
+2. Include appropriate tests
+3. Update relevant documentation
+4. Respect the Apache 2.0 license terms
 
-See our [Contributing Guide](./CONTRIBUTING.md) for development setup, coding standards, and how to submit pull requests.
+## 📝 Changelog
 
-Check our [Official Roadmap](https://github.com/orgs/google-gemini/projects/11/) for planned features and priorities.
-
-## 📖 Resources
-
-- **[Official Roadmap](./ROADMAP.md)** - See what's coming next
-- **[NPM Package](https://www.npmjs.com/package/@google/gemini-cli)** - Package registry
-- **[GitHub Issues](https://github.com/google-gemini/gemini-cli/issues)** - Report bugs or request features
-- **[Security Advisories](https://github.com/google-gemini/gemini-cli/security/advisories)** - Security updates
-
-### Uninstall
-
-See the [Uninstall Guide](docs/Uninstall.md) for removal instructions.
-
-## 📄 Legal
-
-- **License**: [Apache License 2.0](LICENSE)
-- **Terms of Service**: [Terms & Privacy](./docs/tos-privacy.md)
-- **Security**: [Security Policy](SECURITY.md)
+### v1.0.0
+- Initial release with Volcengine AI integration
+- Full compatibility with original Gemini CLI
+- Environment variable configuration support
+- Chinese language optimization
 
 ---
 
-<p align="center">
-  Built with ❤️ by Google and the open source community
-</p>
+**Disclaimer**: This project is not affiliated with Google or Volcengine. Please comply with the terms of service of the respective platforms when using this software.
