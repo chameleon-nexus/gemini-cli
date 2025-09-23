@@ -7,9 +7,9 @@
 
 > ⚠️ **Tuyên bố quan trọng**: Đây là phiên bản đã chỉnh sửa của [Google Gemini CLI](https://github.com/google-gemini/gemini-cli). Dự án gốc thuộc bản quyền của Google LLC và tuân theo Giấy phép Apache 2.0.
 
-## 🌐 Chuyển đổi ngôn ngữ / Language Switch
+## 🌐 Chuyển đổi ngôn ngữ
 
-| 🇺🇸 [English](../README.md) | 🇨🇳 [中文](README.zh.md) | 🇯🇵 [日本語](README.ja.md) | 🇩🇪 [Deutsch](README.de.md) | 🇻🇳 **Tiếng Việt** | 🇸🇦 [العربية](README.ar.md) |
+| 🇺🇸 [English](../README.md) | 🇻🇳 **Tiếng Việt** | 🇯🇵 [日本語](README.ja.md) | 🇩🇪 [Deutsch](README.de.md) | 🇸🇦 [العربية](README.ar.md) | 🇨🇳 [中文](README.zh.md) |
 
 ## 🌟 Tính năng chính
 

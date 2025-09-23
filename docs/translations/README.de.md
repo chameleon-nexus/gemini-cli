@@ -7,9 +7,9 @@
 
 > ⚠️ **Wichtiger Hinweis**: Dies ist eine modifizierte Version von [Google Gemini CLI](https://github.com/google-gemini/gemini-cli). Das ursprüngliche Projekt ist urheberrechtlich geschützt von Google LLC und folgt der Apache 2.0 Lizenz.
 
-## 🌐 Sprachumschaltung / Language Switch
+## 🌐 Sprachumschaltung
 
-| 🇺🇸 [English](../README.md) | 🇨🇳 [中文](README.zh.md) | 🇯🇵 [日本語](README.ja.md) | 🇩🇪 **Deutsch** | 🇻🇳 [Tiếng Việt](README.vi.md) | 🇸🇦 [العربية](README.ar.md) |
+| 🇺🇸 [English](../README.md) | 🇻🇳 [Tiếng Việt](README.vi.md) | 🇯🇵 [日本語](README.ja.md) | 🇩🇪 **Deutsch** | 🇸🇦 [العربية](README.ar.md) | 🇨🇳 [中文](README.zh.md) |
 
 ## 🌟 Hauptfunktionen
 

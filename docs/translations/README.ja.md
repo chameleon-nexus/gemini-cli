@@ -7,9 +7,9 @@
 
 > ⚠️ **重要な声明**: これは [Google Gemini CLI](https://github.com/google-gemini/gemini-cli) の修正版です。元のプロジェクトの著作権は Google LLC に帰属し、Apache 2.0 ライセンスに従います。
 
-## 🌐 言語切り替え / Language Switch
+## 🌐 言語切り替え
 
-| 🇺🇸 [English](../README.md) | 🇨🇳 [中文](README.zh.md) | 🇯🇵 **日本語** | 🇩🇪 [Deutsch](README.de.md) | 🇻🇳 [Tiếng Việt](README.vi.md) | 🇸🇦 [العربية](README.ar.md) |
+| 🇺🇸 [English](../README.md) | 🇻🇳 [Tiếng Việt](README.vi.md) | 🇯🇵 **日本語** | 🇩🇪 [Deutsch](README.de.md) | 🇸🇦 [العربية](README.ar.md) | 🇨🇳 [中文](README.zh.md) |
 
 ## 🌟 主要機能
 
