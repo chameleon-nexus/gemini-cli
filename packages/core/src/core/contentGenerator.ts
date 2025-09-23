@@ -12,12 +12,13 @@ import type {
   EmbedContentResponse,
   EmbedContentParameters,
 } from '@google/genai';
+import { GoogleGenAI } from '@google/genai';
 import { createCodeAssistContentGenerator } from '../code_assist/codeAssist.js';
 import type { Config } from '../config/config.js';
 
 import type { UserTierId } from '../code_assist/types.js';
 import { LoggingContentGenerator } from './loggingContentGenerator.js';
-import { ContentGeneratorFactory, type AiEngine } from './contentGeneratorFactory.js';
+import { InstallationManager } from '../utils/installationManager.js';
 
 /**
  * Interface abstracting the core functionalities for generating content and counting tokens.
@@ -127,20 +128,23 @@ export async function createContentGenerator(
     config.authType === AuthType.USE_GEMINI ||
     config.authType === AuthType.USE_VERTEX_AI
   ) {
-    // 🚀 使用工厂模式创建ContentGenerator，支持多引擎选择
-    console.log('🤖 Multi-Engine ContentGenerator Factory: Initializing AI engine...');
-    
-    // 打印引擎状态信息
-    ContentGeneratorFactory.printEngineStatus();
-    
-    const engine = ContentGeneratorFactory.getCurrentEngine();
-    
-    if (!ContentGeneratorFactory.isEngineSupported(engine)) {
-      throw new Error(`不支持的AI引擎: ${engine}。支持的引擎: ${ContentGeneratorFactory.getSupportedEngines().join(', ')}`);
+    let headers: Record<string, string> = { ...baseHeaders };
+    if (gcConfig?.getUsageStatisticsEnabled()) {
+      const installationManager = new InstallationManager();
+      const installationId = installationManager.getInstallationId();
+      headers = {
+        ...headers,
+        'x-gemini-api-privileged-user-id': `${installationId}`,
+      };
     }
-    
-    const contentGenerator = ContentGeneratorFactory.createContentGenerator(engine as AiEngine);
-    return new LoggingContentGenerator(contentGenerator, gcConfig);
+    const httpOptions = { headers };
+
+    const googleGenAI = new GoogleGenAI({
+      apiKey: config.apiKey === '' ? undefined : config.apiKey,
+      vertexai: config.vertexai,
+      httpOptions,
+    });
+    return new LoggingContentGenerator(googleGenAI.models, gcConfig);
   }
   throw new Error(
     `Error creating contentGenerator: Unsupported authType: ${config.authType}`,

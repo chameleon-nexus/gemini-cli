@@ -7,6 +7,10 @@
 
 > ⚠️ **Important Notice**: This is a modified version of [Google Gemini CLI](https://github.com/google-gemini/gemini-cli). Original project copyright belongs to Google LLC under Apache 2.0 License.
 
+## 🌐 Language Switch / 语言切换
+
+| 🇺🇸 **English** | 🇨🇳 [中文](docs/translations/README.zh.md) | 🇯🇵 [日本語](docs/translations/README.ja.md) | 🇩🇪 [Deutsch](docs/translations/README.de.md) | 🇻🇳 [Tiếng Việt](docs/translations/README.vi.md) | 🇸🇦 [العربية](docs/translations/README.ar.md) |
+
 ## 🌟 Core Features
 
 - 🎯 **6 Major AI Engines**: OpenRouter, Azure, Ollama, Volcengine, Bailian, GLM
