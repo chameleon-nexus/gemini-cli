@@ -6,12 +6,16 @@
 
 import type { ContentGenerator } from './contentGenerator.js';
 import { VolcengineContentGenerator } from './volcengineContentGenerator.js';
+import { OpenrouterContentGenerator } from './openrouterContentGenerator.js';
+import { AzureContentGenerator } from './azureContentGenerator.js';
+import { DashscopeContentGenerator } from './dashscopeContentGenerator.js';
+import { OllamaContentGenerator } from './ollamaContentGenerator.js';
 
 /**
  * AI引擎类型定义
  * 可以轻松扩展新的引擎类型
  */
-export type AiEngine = 'volcengine' | 'openai' | 'anthropic' | 'deepseek' | 'custom';
+export type AiEngine = 'volcengine' | 'openrouter' | 'azure' | 'dashscope' | 'ollama' | 'openai' | 'anthropic' | 'deepseek' | 'custom';
 
 /**
  * ContentGenerator工厂类
@@ -35,17 +39,33 @@ export class ContentGeneratorFactory {
         console.log('🔥 Volcengine AI Adapter: Initializing...');
         return new VolcengineContentGenerator();
         
+      case 'openrouter':
+        console.log('🌐 OpenRouter AI Adapter: Initializing...');
+        return new OpenrouterContentGenerator();
+        
+      case 'azure':
+        console.log('☁️ Azure OpenAI Adapter: Initializing...');
+        return new AzureContentGenerator();
+        
+      case 'dashscope':
+        console.log('🌊 Alibaba Cloud DashScope Adapter: Initializing...');
+        return new DashscopeContentGenerator();
+        
+      case 'ollama':
+        console.log('🦙 Ollama Local AI Adapter: Initializing...');
+        return new OllamaContentGenerator();
+        
       case 'openai':
-        throw new Error('OpenAI engine not implemented yet. Please use volcengine.');
+        throw new Error('OpenAI engine not implemented yet. Please use openrouter or azure.');
         
       case 'anthropic':
-        throw new Error('Anthropic engine not implemented yet. Please use volcengine.');
+        throw new Error('Anthropic engine not implemented yet. Please use openrouter.');
         
       case 'deepseek':
-        throw new Error('DeepSeek engine not implemented yet. Please use volcengine.');
+        throw new Error('DeepSeek engine not implemented yet. Please use volcengine or openrouter.');
         
       case 'custom':
-        throw new Error('Custom engine not implemented yet. Please use volcengine.');
+        throw new Error('Custom engine not implemented yet.');
         
       default:
         console.log('🔥 Default Engine: Using Volcengine AI');
@@ -67,7 +87,7 @@ export class ContentGeneratorFactory {
    * @returns 是否支持该引擎
    */
   static isEngineSupported(engine: string): boolean {
-    const supportedEngines: AiEngine[] = ['volcengine'];
+    const supportedEngines: AiEngine[] = ['volcengine', 'openrouter', 'azure', 'dashscope', 'ollama'];
     return supportedEngines.includes(engine.toLowerCase() as AiEngine);
   }
 
@@ -76,7 +96,7 @@ export class ContentGeneratorFactory {
    * @returns 支持的引擎列表
    */
   static getSupportedEngines(): AiEngine[] {
-    return ['volcengine'];
+    return ['volcengine', 'openrouter', 'azure', 'dashscope', 'ollama'];
   }
 
   /**
@@ -84,7 +104,7 @@ export class ContentGeneratorFactory {
    * @returns 所有引擎列表
    */
   static getAllEngines(): AiEngine[] {
-    return ['volcengine', 'openai', 'anthropic', 'deepseek', 'custom'];
+    return ['volcengine', 'openrouter', 'azure', 'dashscope', 'ollama', 'openai', 'anthropic', 'deepseek', 'custom'];
   }
 
   /**

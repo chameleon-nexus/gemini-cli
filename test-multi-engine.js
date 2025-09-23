@@ -1,49 +1,55 @@
+#!/usr/bin/env node
+
 /**
- * 多引擎适配测试脚本
- * 用于验证不同AI引擎的切换功能
+ * 多引擎测试脚本
+ * 测试不同的AI引擎适配器是否正常工作
  */
 
-// 测试环境变量设置
-const testEngines = ['gemini', 'volcengine'];
+import { ContentGeneratorFactory } from './packages/core/dist/src/core/contentGeneratorFactory.js';
 
-console.log('🧪 开始多引擎适配测试...\n');
+console.log('🚀 多引擎AI适配器测试\n');
 
-testEngines.forEach(engine => {
-  console.log(`\n📋 测试引擎: ${engine.toUpperCase()}`);
-  
-  // 设置环境变量
-  process.env['AI_ENGINE'] = engine;
-  
+// 显示支持的引擎
+console.log('📋 支持的引擎列表:');
+const supportedEngines = ContentGeneratorFactory.getSupportedEngines();
+const allEngines = ContentGeneratorFactory.getAllEngines();
+
+console.log('✅ 已实现的引擎:', supportedEngines.join(', '));
+console.log('📝 所有计划引擎:', allEngines.join(', '));
+
+// 测试每个引擎的初始化
+console.log('\n🔧 测试引擎初始化:');
+
+for (const engine of supportedEngines) {
   try {
-    // 动态导入模块 (ES模块语法)
-    import('./packages/core/src/core/contentGeneratorFactory.js').then(module => {
-      const { ContentGeneratorFactory } = module;
-      
-      // 测试工厂方法
-      console.log(`   ✅ 当前引擎: ${ContentGeneratorFactory.getCurrentEngine()}`);
-      console.log(`   ✅ 引擎支持: ${ContentGeneratorFactory.isEngineSupported(engine)}`);
-      console.log(`   ✅ 支持的引擎: ${ContentGeneratorFactory.getSupportedEngines().join(', ')}`);
-      
-      // 测试创建实例
-      try {
-        const generator = ContentGeneratorFactory.createContentGenerator();
-        console.log(`   ✅ 实例创建成功: ${generator.constructor.name}`);
-      } catch (error) {
-        console.log(`   ❌ 实例创建失败: ${error.message}`);
-      }
-      
-    }).catch(error => {
-      console.log(`   ❌ 模块导入失败: ${error.message}`);
-    });
+    console.log(`\n测试 ${engine.toUpperCase()} 引擎:`);
+    
+    // 设置环境变量
+    process.env['AI_ENGINE'] = engine;
+    
+    // 创建引擎实例
+    const generator = ContentGeneratorFactory.createContentGenerator(engine);
+    
+    console.log(`  ✅ ${engine} 引擎初始化成功`);
+    console.log(`  📝 类型: ${generator.constructor.name}`);
     
   } catch (error) {
-    console.log(`   ❌ 测试失败: ${error.message}`);
+    console.log(`  ❌ ${engine} 引擎初始化失败: ${error.message}`);
   }
-});
+}
 
-console.log('\n🎯 测试完成！');
-console.log('\n💡 使用说明:');
-console.log('   1. 设置环境变量: export AI_ENGINE="volcengine"');
-console.log('   2. 设置API密钥: export VOLCENGINE_API_KEY="your-key"');
-console.log('   3. 运行CLI: gemini "你好"');
+// 测试默认引擎
+console.log('\n🎯 测试默认引擎:');
+try {
+  delete process.env['AI_ENGINE'];
+  const defaultGenerator = ContentGeneratorFactory.createContentGenerator();
+  console.log(`  ✅ 默认引擎: ${defaultGenerator.constructor.name}`);
+} catch (error) {
+  console.log(`  ❌ 默认引擎失败: ${error.message}`);
+}
 
+// 测试引擎状态显示
+console.log('\n📊 引擎状态:');
+ContentGeneratorFactory.printEngineStatus();
+
+console.log('\n✨ 测试完成！');
