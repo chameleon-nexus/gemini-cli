@@ -10,12 +10,20 @@ import { OpenrouterContentGenerator } from './openrouterContentGenerator.js';
 import { AzureContentGenerator } from './azureContentGenerator.js';
 import { DashscopeContentGenerator } from './dashscopeContentGenerator.js';
 import { OllamaContentGenerator } from './ollamaContentGenerator.js';
+import { GlmContentGenerator } from './glmContentGenerator.js';
+import { 
+  DEFAULT_AI_ENGINE, 
+  SUPPORTED_ENGINES, 
+  ALL_ENGINES,
+  type SupportedEngine,
+  type AllEngine 
+} from './engineConstants.js';
 
 /**
  * AI引擎类型定义
- * 可以轻松扩展新的引擎类型
+ * 使用统一的常量定义
  */
-export type AiEngine = 'volcengine' | 'openrouter' | 'azure' | 'dashscope' | 'ollama' | 'openai' | 'anthropic' | 'deepseek' | 'custom';
+export type AiEngine = AllEngine;
 
 /**
  * ContentGenerator工厂类
@@ -30,7 +38,7 @@ export class ContentGeneratorFactory {
    */
   static createContentGenerator(engineType?: AiEngine): ContentGenerator {
     // 优先使用传入的参数，其次使用环境变量，最后使用默认值
-    const engine = (engineType || process.env['AI_ENGINE'] || 'volcengine').toLowerCase() as AiEngine;
+    const engine = (engineType || process.env['AI_ENGINE'] || DEFAULT_AI_ENGINE).toLowerCase() as AiEngine;
 
     console.log(`🚀 Multi-Engine Support: Using ${engine.toUpperCase()} AI Engine`);
 
@@ -51,21 +59,25 @@ export class ContentGeneratorFactory {
         console.log('🌊 Alibaba Cloud DashScope Adapter: Initializing...');
         return new DashscopeContentGenerator();
         
-      case 'ollama':
-        console.log('🦙 Ollama Local AI Adapter: Initializing...');
-        return new OllamaContentGenerator();
-        
-      case 'openai':
-        throw new Error('OpenAI engine not implemented yet. Please use openrouter or azure.');
-        
-      case 'anthropic':
-        throw new Error('Anthropic engine not implemented yet. Please use openrouter.');
-        
-      case 'deepseek':
-        throw new Error('DeepSeek engine not implemented yet. Please use volcengine or openrouter.');
-        
-      case 'custom':
-        throw new Error('Custom engine not implemented yet.');
+             case 'ollama':
+               console.log('🦙 Ollama Local AI Adapter: Initializing...');
+               return new OllamaContentGenerator();
+               
+             case 'glm':
+               console.log('🧠 智谱AI GLM Adapter: Initializing...');
+               return new GlmContentGenerator();
+               
+             case 'openai':
+               throw new Error('OpenAI engine not implemented yet. Please use openrouter or azure.');
+               
+             case 'anthropic':
+               throw new Error('Anthropic engine not implemented yet. Please use openrouter.');
+               
+             case 'deepseek':
+               throw new Error('DeepSeek engine not implemented yet. Please use volcengine or openrouter.');
+               
+             case 'custom':
+               throw new Error('Custom engine not implemented yet.');
         
       default:
         console.log('🔥 Default Engine: Using Volcengine AI');
@@ -78,7 +90,7 @@ export class ContentGeneratorFactory {
    * @returns 当前引擎类型
    */
   static getCurrentEngine(): AiEngine {
-    return (process.env['AI_ENGINE'] || 'volcengine').toLowerCase() as AiEngine;
+    return (process.env['AI_ENGINE'] || DEFAULT_AI_ENGINE).toLowerCase() as AiEngine;
   }
 
   /**
@@ -87,24 +99,23 @@ export class ContentGeneratorFactory {
    * @returns 是否支持该引擎
    */
   static isEngineSupported(engine: string): boolean {
-    const supportedEngines: AiEngine[] = ['volcengine', 'openrouter', 'azure', 'dashscope', 'ollama'];
-    return supportedEngines.includes(engine.toLowerCase() as AiEngine);
+    return SUPPORTED_ENGINES.includes(engine.toLowerCase() as SupportedEngine);
   }
 
   /**
    * 获取所有支持的引擎列表
    * @returns 支持的引擎列表
    */
-  static getSupportedEngines(): AiEngine[] {
-    return ['volcengine', 'openrouter', 'azure', 'dashscope', 'ollama'];
+  static getSupportedEngines(): SupportedEngine[] {
+    return [...SUPPORTED_ENGINES];
   }
 
   /**
    * 获取所有可用的引擎列表（包括未实现的）
    * @returns 所有引擎列表
    */
-  static getAllEngines(): AiEngine[] {
-    return ['volcengine', 'openrouter', 'azure', 'dashscope', 'ollama', 'openai', 'anthropic', 'deepseek', 'custom'];
+  static getAllEngines(): AllEngine[] {
+    return [...ALL_ENGINES];
   }
 
   /**
