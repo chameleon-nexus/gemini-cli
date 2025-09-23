@@ -6,7 +6,7 @@ echo "🔥 Testing Volcengine with DeepSeek V3..."
 echo "=================================="
 
 # 设置环境变量
-export AI_API_KEY="sk-1234567890abcdef1234567890abcdef"
+export AI_API_KEY="your-volcengine-api-key"
 export AI_ENGINE="volcengine"
 export AI_MODEL="deepseek-v3-250324"
 

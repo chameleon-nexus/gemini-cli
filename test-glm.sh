@@ -6,7 +6,7 @@ echo "🧠 Testing GLM with GLM-4..."
 echo "=========================="
 
 # 设置环境变量
-export AI_API_KEY="sk-1234567890abcdef1234567890abcdef"
+export AI_API_KEY="your-glm-api-key"
 export AI_ENGINE="glm"
 export AI_MODEL="glm-4"
 

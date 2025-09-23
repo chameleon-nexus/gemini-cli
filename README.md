@@ -1,4 +1,4 @@
-# Gemini CLI (Chameleon Nexus Tech Edition) - Multi-Engine AI Platform
+# Gemini CLI (CatalystAI Edition) - Multi-Engine AI Platform
 
 [![npm version](https://badge.fury.io/js/%40chameleon-nexus-tech%2Fgemini-cli.svg)](https://badge.fury.io/js/%40chameleon-nexus-tech%2Fgemini-cli)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
@@ -19,7 +19,7 @@
 ## 📦 Installation
 
 ```bash
-npm install -g @chameleon-nexus-tech/gemini-cli
+npm install -g @catalystai/gemini-cli
 ```
 
 ## 🎛️ Supported AI Engines & Models
@@ -70,13 +70,13 @@ npm install -g @chameleon-nexus-tech/gemini-cli
 
 ```bash
 # Unified API Key (works for all engines)
-export AI_API_KEY="your-api-key-here"
+export AI_API_KEY="your-actual-api-key-from-your-ai-provider"
 
 # Unified Model Name (works for all engines)
-export AI_MODEL="your-model-name"
+export AI_MODEL="your-preferred-model-name"
 
 # Unified Base URL (optional, only needed for custom URLs)
-export AI_BASE_URL="your-custom-url"
+export AI_BASE_URL="your-custom-endpoint-url"
 
 # Engine Selection (one variable controls all)
 export AI_ENGINE="volcengine"  # Options: openrouter, azure, ollama, volcengine, bailian, glm
@@ -86,8 +86,8 @@ export AI_ENGINE="volcengine"  # Options: openrouter, azure, ollama, volcengine,
 
 ```powershell
 # Unified configuration
-$env:AI_API_KEY="your-api-key-here"
-$env:AI_MODEL="your-model-name"
+$env:AI_API_KEY="your-actual-api-key-from-your-ai-provider"
+$env:AI_MODEL="your-preferred-model-name"
 $env:AI_ENGINE="volcengine"
 ```
 
@@ -97,16 +97,16 @@ If using engine-specific configuration, the system will automatically fallback t
 
 ```bash
 # OpenRouter specific configuration  
-export OPENROUTER_API_KEY="openrouter-key"
+export OPENROUTER_API_KEY="your-openrouter-api-key"
 export OPENROUTER_MODEL="anthropic/claude-3.5-sonnet"
 
 # Azure specific configuration
-export AZURE_API_KEY="azure-key"
+export AZURE_API_KEY="your-azure-openai-api-key"
 export AZURE_BASE_URL="https://your-resource.openai.azure.com"
 export AZURE_MODEL="gpt-4"
 
 # Volcengine specific configuration
-export VOLCENGINE_API_KEY="volcengine-key"
+export VOLCENGINE_API_KEY="your-volcengine-api-key"
 export VOLCENGINE_MODEL="deepseek-v3-250324"
 ```
 
@@ -132,7 +132,7 @@ Then select "2. Use Gemini API Key" and press Enter to start chatting.
 
 ```bash
 # Using unified configuration
-export AI_API_KEY="sk-or-v1-1234567890abcdef1234567890abcdef"
+export AI_API_KEY="your-openrouter-api-key"
 export AI_ENGINE="openrouter"
 export AI_MODEL="anthropic/claude-3.5-sonnet"
 
@@ -144,7 +144,7 @@ gemini "Hello, please introduce yourself and tell me which AI model you are."
 
 ```bash
 # Using unified configuration
-export AI_API_KEY="sk-1234567890abcdef1234567890abcdef"
+export AI_API_KEY="your-azure-openai-api-key"
 export AI_ENGINE="azure"
 export AI_BASE_URL="https://your-resource.openai.azure.com"
 export AI_MODEL="gpt-4"
@@ -169,7 +169,7 @@ gemini "Hello, please introduce yourself and tell me which AI model you are."
 
 ```bash
 # Using unified configuration
-export AI_API_KEY="sk-1234567890abcdef1234567890abcdef"
+export AI_API_KEY="your-volcengine-api-key"
 export AI_ENGINE="volcengine"
 export AI_MODEL="deepseek-v3-250324"
 
@@ -181,7 +181,7 @@ gemini "Please introduce yourself and tell me which AI model you are."
 
 ```bash
 # Using unified configuration
-export AI_API_KEY="sk-1234567890abcdef1234567890abcdef"
+export AI_API_KEY="your-bailian-api-key"
 export AI_ENGINE="bailian"
 export AI_MODEL="qwen-plus"
 
@@ -193,7 +193,7 @@ gemini "Please introduce yourself and tell me which AI model you are."
 
 ```bash
 # Using unified configuration
-export AI_API_KEY="sk-1234567890abcdef1234567890abcdef"
+export AI_API_KEY="your-glm-api-key"
 export AI_ENGINE="glm"
 export AI_MODEL="glm-4"
 
@@ -311,14 +311,14 @@ In accordance with Apache 2.0 License Section 4:
 If you're migrating from the original Google Gemini CLI:
 
 1. **Uninstall original version**: `npm uninstall -g @google/gemini-cli`
-2. **Install this version**: `npm install -g @chameleon-nexus-tech/gemini-cli`
-3. **Set API key**: `export AI_API_KEY="your-key"`
+2. **Install this version**: `npm install -g @catalystai/gemini-cli`
+3. **Set API key**: `export AI_API_KEY="your-actual-api-key"`
 4. **Select engine**: `export AI_ENGINE="volcengine"` (or other engines)
 5. **Use as before**: All commands remain the same
 
 ## 🧪 Test Scripts
 
-Ready-to-use test scripts are provided for each engine. These scripts make it easy to test different AI engines with fake API keys.
+Ready-to-use test scripts are provided for each engine. These scripts make it easy to test different AI engines with placeholder API keys that you need to replace with your actual keys.
 
 ### 🚀 How to Use Test Scripts
 
@@ -353,11 +353,11 @@ powershell -ExecutionPolicy Bypass -File test-volcengine.ps1
 
 #### Configuration
 
-Before running test scripts, replace the fake API keys with your real ones:
+Before running test scripts, replace the placeholder API keys with your actual ones:
 
 ```bash
-# Edit any test script and replace the fake API key
-export AI_API_KEY="your-real-api-key-here"
+# Edit any test script and replace the placeholder API key
+export AI_API_KEY="your-actual-api-key-from-your-ai-provider"
 ```
 
 ### 📋 Available Test Scripts
@@ -367,7 +367,7 @@ export AI_API_KEY="your-real-api-key-here"
 ```bash
 #!/bin/bash
 # test-openrouter.sh
-export AI_API_KEY="sk-or-v1-1234567890abcdef1234567890abcdef"
+export AI_API_KEY="your-openrouter-api-key"
 export AI_ENGINE="openrouter"
 export AI_MODEL="anthropic/claude-3.5-sonnet"
 
@@ -380,7 +380,7 @@ gemini "Hello, please introduce yourself and tell me which AI model you are."
 ```bash
 #!/bin/bash
 # test-azure.sh
-export AI_API_KEY="sk-1234567890abcdef1234567890abcdef"
+export AI_API_KEY="your-azure-openai-api-key"
 export AI_ENGINE="azure"
 export AI_BASE_URL="https://your-resource.openai.azure.com"
 export AI_MODEL="gpt-4"
@@ -407,7 +407,7 @@ gemini "Hello, please introduce yourself and tell me which AI model you are."
 ```bash
 #!/bin/bash
 # test-volcengine.sh
-export AI_API_KEY="sk-1234567890abcdef1234567890abcdef"
+export AI_API_KEY="your-volcengine-api-key"
 export AI_ENGINE="volcengine"
 export AI_MODEL="deepseek-v3-250324"
 
@@ -420,7 +420,7 @@ gemini "Please introduce yourself and tell me which AI model you are."
 ```bash
 #!/bin/bash
 # test-bailian.sh
-export AI_API_KEY="sk-1234567890abcdef1234567890abcdef"
+export AI_API_KEY="your-bailian-api-key"
 export AI_ENGINE="bailian"
 export AI_MODEL="qwen-plus"
 
@@ -433,7 +433,7 @@ gemini "Please introduce yourself and tell me which AI model you are."
 ```bash
 #!/bin/bash
 # test-glm.sh
-export AI_API_KEY="sk-1234567890abcdef1234567890abcdef"
+export AI_API_KEY="your-glm-api-key"
 export AI_ENGINE="glm"
 export AI_MODEL="glm-4"
 

@@ -6,7 +6,7 @@ echo "☁️ Testing Azure OpenAI with GPT-4..."
 echo "===================================="
 
 # 设置环境变量
-export AI_API_KEY="sk-1234567890abcdef1234567890abcdef"
+export AI_API_KEY="your-azure-openai-api-key"
 export AI_ENGINE="azure"
 export AI_BASE_URL="https://your-resource.openai.azure.com"
 export AI_MODEL="gpt-4"

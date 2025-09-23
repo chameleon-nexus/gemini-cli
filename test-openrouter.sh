@@ -6,7 +6,7 @@ echo "🌐 Testing OpenRouter with Claude 3.5 Sonnet..."
 echo "============================================="
 
 # 设置环境变量
-export AI_API_KEY="sk-or-v1-1234567890abcdef1234567890abcdef"
+export AI_API_KEY="your-openrouter-api-key"
 export AI_ENGINE="openrouter"
 export AI_MODEL="anthropic/claude-3.5-sonnet"
 

@@ -5,7 +5,7 @@ Write-Host "🌐 Testing OpenRouter with Claude 3.5 Sonnet..." -ForegroundColor 
 Write-Host "=============================================" -ForegroundColor Gray
 
 # 设置环境变量
-$env:AI_API_KEY = "sk-or-v1-1234567890abcdef1234567890abcdef"
+$env:AI_API_KEY = "your-openrouter-api-key"
 $env:AI_ENGINE = "openrouter"
 $env:AI_MODEL = "anthropic/claude-3.5-sonnet"
 

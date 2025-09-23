@@ -5,7 +5,7 @@ Write-Host "🔥 Testing Volcengine with DeepSeek V3..." -ForegroundColor Red
 Write-Host "==================================" -ForegroundColor Gray
 
 # 设置环境变量
-$env:AI_API_KEY = "sk-1234567890abcdef1234567890abcdef"
+$env:AI_API_KEY = "your-volcengine-api-key"
 $env:AI_ENGINE = "volcengine"
 $env:AI_MODEL = "deepseek-v3-250324"
 

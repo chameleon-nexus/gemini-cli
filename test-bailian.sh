@@ -6,7 +6,7 @@ echo "🌊 Testing Bailian with Qwen Plus..."
 echo "=================================="
 
 # 设置环境变量
-export AI_API_KEY="sk-1234567890abcdef1234567890abcdef"
+export AI_API_KEY="your-bailian-api-key"
 export AI_ENGINE="bailian"
 export AI_MODEL="qwen-plus"
 
