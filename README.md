@@ -318,7 +318,49 @@ If you're migrating from the original Google Gemini CLI:
 
 ## 🧪 Test Scripts
 
-Ready-to-use test scripts are provided for each engine:
+Ready-to-use test scripts are provided for each engine. These scripts make it easy to test different AI engines with fake API keys.
+
+### 🚀 How to Use Test Scripts
+
+#### Linux/macOS Users
+
+```bash
+# Make scripts executable
+chmod +x test-*.sh
+
+# Test individual engines
+./test-openrouter.sh
+./test-azure.sh
+./test-ollama.sh
+./test-volcengine.sh
+./test-bailian.sh
+./test-glm.sh
+
+# Test all engines at once
+./test-all-engines.sh
+```
+
+#### Windows Users
+
+```powershell
+# Test individual engines
+.\test-volcengine.ps1
+.\test-openrouter.ps1
+
+# Or run directly
+powershell -ExecutionPolicy Bypass -File test-volcengine.ps1
+```
+
+#### Configuration
+
+Before running test scripts, replace the fake API keys with your real ones:
+
+```bash
+# Edit any test script and replace the fake API key
+export AI_API_KEY="your-real-api-key-here"
+```
+
+### 📋 Available Test Scripts
 
 ### 🌐 OpenRouter Test Script
 

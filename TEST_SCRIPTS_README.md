@@ -1,170 +1,168 @@
-# 🧪 测试脚本使用说明
+# 🧪 Test Scripts Usage Guide
 
-本目录包含了用于测试各个AI引擎的脚本文件，方便用户快速验证不同引擎的功能。
+This directory contains test scripts for each AI engine, making it easy for users to quickly verify the functionality of different engines.
 
-## 📁 脚本文件列表
+## 📁 Script Files List
 
-### 🐧 Linux/macOS 脚本 (.sh)
-- `test-volcengine.sh` - 测试火山引擎 (DeepSeek V3)
-- `test-openrouter.sh` - 测试OpenRouter (Claude 3.5 Sonnet)
-- `test-azure.sh` - 测试Azure OpenAI (GPT-4)
-- `test-dashscope.sh` - 测试DashScope (Qwen Plus)
-- `test-bailian.sh` - 测试Bailian (Qwen Plus)
-- `test-glm.sh` - 测试GLM (GLM-4)
-- `test-ollama.sh` - 测试Ollama (Llama 3.2)
-- `test-all-engines.sh` - 综合测试所有引擎
+### 🐧 Linux/macOS Scripts (.sh)
+- `test-openrouter.sh` - Test OpenRouter (Claude 3.5 Sonnet)
+- `test-azure.sh` - Test Azure OpenAI (GPT-4)
+- `test-ollama.sh` - Test Ollama (Llama 3.2)
+- `test-volcengine.sh` - Test Volcengine (DeepSeek V3)
+- `test-bailian.sh` - Test Bailian (Qwen Plus)
+- `test-glm.sh` - Test GLM (GLM-4)
+- `test-all-engines.sh` - Comprehensive test for all engines
 
-### 🪟 Windows 脚本 (.ps1)
-- `test-volcengine.ps1` - 测试火山引擎 (PowerShell版本)
-- `test-openrouter.ps1` - 测试OpenRouter (PowerShell版本)
+### 🪟 Windows Scripts (.ps1)
+- `test-volcengine.ps1` - Test Volcengine (PowerShell version)
+- `test-openrouter.ps1` - Test OpenRouter (PowerShell version)
 
-## 🚀 使用方法
+## 🚀 Usage Instructions
 
-### Linux/macOS 用户
+### Linux/macOS Users
 
 ```bash
-# 给脚本添加执行权限
+# Make scripts executable
 chmod +x test-*.sh
 
-# 测试单个引擎
-./test-volcengine.sh
+# Test individual engines
 ./test-openrouter.sh
 ./test-azure.sh
+./test-ollama.sh
+./test-volcengine.sh
+./test-bailian.sh
+./test-glm.sh
 
-# 测试所有引擎
+# Test all engines at once
 ./test-all-engines.sh
 ```
 
-### Windows 用户
+### Windows Users
 
 ```powershell
-# 测试单个引擎
+# Test individual engines
 .\test-volcengine.ps1
 .\test-openrouter.ps1
 
-# 或者直接运行
+# Or run directly
 powershell -ExecutionPolicy Bypass -File test-volcengine.ps1
 ```
 
-## ⚙️ 配置说明
+## ⚙️ Configuration
 
-### 🔧 修改API密钥
+### 🔧 Modify API Keys
 
-在运行测试脚本之前，请将脚本中的假API密钥替换为你的真实API密钥：
+Before running test scripts, replace the fake API keys with your real ones:
 
 ```bash
-# 示例：修改test-volcengine.sh
+# Example: modify test-volcengine.sh
 export AI_API_KEY="your-real-api-key-here"
 ```
 
-### 🔧 修改配置参数
+### 🔧 Modify Configuration Parameters
 
-你可以根据需要修改以下参数：
+You can modify the following parameters as needed:
 
 ```bash
-# 模型名称
+# Model name
 export AI_MODEL="your-preferred-model"
 
-# Base URL (仅Azure和Ollama需要)
+# Base URL (only needed for Azure and Ollama)
 export AI_BASE_URL="your-custom-url"
 
-# 测试提示词
+# Test prompt
 gemini "your-custom-prompt"
 ```
 
-## 📋 各引擎配置要求
-
-### 🔥 Volcengine
-- **必需**: `AI_API_KEY`
-- **可选**: `AI_MODEL` (默认: deepseek-v3-250324)
+## 📋 Engine Configuration Requirements
 
 ### 🌐 OpenRouter
-- **必需**: `AI_API_KEY` (OpenRouter API Key)
-- **可选**: `AI_MODEL` (默认: anthropic/claude-3.5-sonnet)
+- **Required**: `AI_API_KEY` (OpenRouter API Key)
+- **Optional**: `AI_MODEL` (default: anthropic/claude-3.5-sonnet)
 
 ### ☁️ Azure OpenAI
-- **必需**: `AI_API_KEY`, `AI_BASE_URL`, `AI_MODEL`
-- **格式**: `AI_BASE_URL="https://your-resource.openai.azure.com"`
-
-### 🌊 DashScope
-- **必需**: `AI_API_KEY` (DashScope API Key)
-- **可选**: `AI_MODEL` (默认: qwen-plus)
-
-### 🌊 Bailian
-- **必需**: `AI_API_KEY` (百炼API Key)
-- **可选**: `AI_MODEL` (默认: qwen-plus)
-
-### 🧠 GLM
-- **必需**: `AI_API_KEY` (智谱AI API Key)
-- **可选**: `AI_MODEL` (默认: glm-4)
+- **Required**: `AI_API_KEY`, `AI_BASE_URL`, `AI_MODEL`
+- **Format**: `AI_BASE_URL="https://your-resource.openai.azure.com"`
 
 ### 🦙 Ollama
-- **必需**: 本地运行Ollama服务
-- **必需**: `AI_BASE_URL="http://localhost:11434"`
-- **可选**: `AI_MODEL` (默认: llama3.2:latest)
+- **Required**: Local Ollama service running
+- **Required**: `AI_BASE_URL="http://localhost:11434"`
+- **Optional**: `AI_MODEL` (default: llama3.2:latest)
 
-## 🔍 故障排除
+### 🔥 Volcengine
+- **Required**: `AI_API_KEY`
+- **Optional**: `AI_MODEL` (default: deepseek-v3-250324)
 
-### ❌ 常见错误
+### 🌊 Bailian
+- **Required**: `AI_API_KEY` (Bailian API Key)
+- **Optional**: `AI_MODEL` (default: qwen-plus)
 
-1. **API Key错误**
+### 🧠 GLM
+- **Required**: `AI_API_KEY` (Zhipu AI API Key)
+- **Optional**: `AI_MODEL` (default: glm-4)
+
+## 🔍 Troubleshooting
+
+### ❌ Common Errors
+
+1. **API Key Error**
    ```
    Error: API key not found
    ```
-   **解决**: 检查并设置正确的API密钥
+   **Solution**: Check and set the correct API key
 
-2. **网络连接问题**
+2. **Network Connection Issues**
    ```
    ConnectTimeoutError
    ```
-   **解决**: 检查网络连接和防火墙设置
+   **Solution**: Check network connection and firewall settings
 
-3. **Ollama未运行**
+3. **Ollama Not Running**
    ```
    Error: Ollama is not running
    ```
-   **解决**: 启动Ollama服务
+   **Solution**: Start Ollama service
    ```bash
    ollama serve
    ollama pull llama3.2:latest
    ```
 
-4. **模型不存在**
+4. **Model Not Found**
    ```
    Error: Model not found
    ```
-   **解决**: 检查模型名称是否正确，或使用默认模型
+   **Solution**: Check if the model name is correct, or use the default model
 
-### 🔧 调试技巧
+### 🔧 Debugging Tips
 
-1. **启用详细日志**
+1. **Enable Verbose Logging**
    ```bash
    export AI_ENGINE_DEBUG=true
    ```
 
-2. **检查环境变量**
+2. **Check Environment Variables**
    ```bash
    echo $AI_ENGINE
    echo $AI_MODEL
    echo $AI_API_KEY
    ```
 
-3. **测试网络连接**
+3. **Test Network Connection**
    ```bash
    curl -I https://api.openai.com/v1/models
    ```
 
-## 📚 更多信息
+## 📚 More Information
 
-- [完整使用指南](../MULTI_ENGINE_GUIDE.md)
-- [项目README](../README.md)
+- [Complete Usage Guide](../MULTI_ENGINE_GUIDE.md)
+- [Project README](../README.md)
 - [GitHub Issues](https://github.com/chameleon-nexus/gemini-cli/issues)
 
-## 🤝 贡献
+## 🤝 Contributing
 
-欢迎提交新的测试脚本或改进现有脚本！请确保：
+Welcome to submit new test scripts or improve existing ones! Please ensure:
 
-1. 使用假API密钥，不要暴露真实密钥
-2. 包含清晰的错误处理
-3. 提供详细的配置说明
-4. 测试脚本的稳定性
+1. Use fake API keys, don't expose real keys
+2. Include clear error handling
+3. Provide detailed configuration instructions
+4. Test script stability
