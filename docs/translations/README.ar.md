@@ -1,5 +1,7 @@
 # Gemini CLI (CatalystAI Edition) - منصة الذكاء الاصطناعي متعددة المحركات
 
+<div dir="rtl" lang="ar">
+
 [![npm version](https://badge.fury.io/js/%40catalystai%2Fgemini-cli.svg)](https://badge.fury.io/js/%40catalystai%2Fgemini-cli)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
@@ -522,3 +524,5 @@ echo "✅ All engines tested!"
 ---
 
 **إخلاء المسؤولية**: هذا المشروع لا علاقة له بـ Google أو OpenRouter أو Azure أو Ollama أو Volcengine أو 阿里云 أو 智谱AI أو شركات أخرى. يرجى الالتزام بشروط الخدمة لكل منصة عند الاستخدام.
+
+</div>
