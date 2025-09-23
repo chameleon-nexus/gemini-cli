@@ -17,7 +17,7 @@ import type { Config } from '../config/config.js';
 
 import type { UserTierId } from '../code_assist/types.js';
 import { LoggingContentGenerator } from './loggingContentGenerator.js';
-import { VolcengineContentGenerator } from './volcengineContentGenerator.js';
+import { ContentGeneratorFactory, type AiEngine } from './contentGeneratorFactory.js';
 
 /**
  * Interface abstracting the core functionalities for generating content and counting tokens.
@@ -127,10 +127,20 @@ export async function createContentGenerator(
     config.authType === AuthType.USE_GEMINI ||
     config.authType === AuthType.USE_VERTEX_AI
   ) {
-    // 🚀 直接使用火山引擎代替Google API！
-    console.log('🔥 使用火山引擎AI代替Google Gemini API');
-    const volcengineGenerator = new VolcengineContentGenerator();
-    return new LoggingContentGenerator(volcengineGenerator, gcConfig);
+    // 🚀 使用工厂模式创建ContentGenerator，支持多引擎选择
+    console.log('🤖 Multi-Engine ContentGenerator Factory: Initializing AI engine...');
+    
+    // 打印引擎状态信息
+    ContentGeneratorFactory.printEngineStatus();
+    
+    const engine = ContentGeneratorFactory.getCurrentEngine();
+    
+    if (!ContentGeneratorFactory.isEngineSupported(engine)) {
+      throw new Error(`不支持的AI引擎: ${engine}。支持的引擎: ${ContentGeneratorFactory.getSupportedEngines().join(', ')}`);
+    }
+    
+    const contentGenerator = ContentGeneratorFactory.createContentGenerator(engine as AiEngine);
+    return new LoggingContentGenerator(contentGenerator, gcConfig);
   }
   throw new Error(
     `Error creating contentGenerator: Unsupported authType: ${config.authType}`,

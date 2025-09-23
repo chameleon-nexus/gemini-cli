@@ -57,13 +57,22 @@ interface VolcengineResponse {
  * 火山引擎ContentGenerator实现
  */
 export class VolcengineContentGenerator implements ContentGenerator {
-  private readonly baseUrl = process.env['VOLCENGINE_BASE_URL'] || 'https://ark.cn-beijing.volces.com/api/v3';
-  private readonly apiKey = process.env['VOLCENGINE_API_KEY'] || process.env['GEMINI_API_KEY'] || (() => {
-    throw new Error('API key not found. Please set VOLCENGINE_API_KEY or GEMINI_API_KEY environment variable.');
-  })();
-  private readonly model = process.env['VOLCENGINE_MODEL'] || 'deepseek-v3-250324';
+  private readonly baseUrl: string;
+  private readonly apiKey: string;
+  private readonly model: string;
 
-  constructor() {}
+  constructor() {
+    // 使用环境变量配置
+    this.baseUrl = process.env['VOLCENGINE_BASE_URL'] || 'https://ark.cn-beijing.volces.com/api/v3';
+    this.apiKey = process.env['VOLCENGINE_API_KEY'] || process.env['GEMINI_API_KEY'] || (() => {
+      throw new Error('API key not found. Please set VOLCENGINE_API_KEY or GEMINI_API_KEY environment variable.');
+    })();
+    this.model = process.env['VOLCENGINE_MODEL'] || 'deepseek-v3-250324';
+    
+    console.log(`🔥 Volcengine ContentGenerator: Initialized successfully`);
+    console.log(`   Model: ${this.model}`);
+    console.log(`   API Endpoint: ${this.baseUrl}`);
+  }
 
   /**
    * 转换Gemini格式的内容为火山引擎格式
@@ -176,7 +185,7 @@ export class VolcengineContentGenerator implements ContentGenerator {
       return this.convertVolcengineToGemini(volcResponse);
 
     } catch (error) {
-      console.error('火山引擎API调用失败:', error);
+      console.error('Volcengine API call failed:', error);
       throw error;
     }
   }
