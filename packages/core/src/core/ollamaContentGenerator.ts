@@ -23,8 +23,9 @@ export class OllamaContentGenerator implements ContentGenerator {
   private readonly model: string;
 
   constructor() {
-    this.baseUrl = process.env['OLLAMA_BASE_URL'] || 'http://localhost:11434';
-    this.model = process.env['OLLAMA_MODEL'] || 'llama3.2:latest';
+    // 统一环境变量支持，优先使用引擎特定变量，fallback到通用变量
+    this.baseUrl = process.env['OLLAMA_BASE_URL'] || process.env['AI_BASE_URL'] || 'http://localhost:11434';
+    this.model = process.env['OLLAMA_MODEL'] || process.env['AI_MODEL'] || 'llama3.2:latest';
     
     console.log('🦙 Ollama ContentGenerator: Initialized successfully');
     console.log(`   Model: ${this.model}`);
@@ -37,32 +38,40 @@ export class OllamaContentGenerator implements ContentGenerator {
     userPromptId: string,
   ): Promise<GenerateContentResponse> {
     try {
-      // 转换请求格式
+      // 转换请求格式 - 使用chat API
       const messages = this.convertGeminiToOllama(request.contents);
       
       const ollamaRequest = {
         model: this.model,
         messages,
+        stream: false, // 非流式响应
         options: {
-          temperature: request.config?.temperature,
-          top_p: request.config?.topP,
-          num_predict: request.config?.maxOutputTokens,
+          temperature: request.config?.temperature || 0.7,
+          top_p: request.config?.topP || 0.9,
+          num_predict: request.config?.maxOutputTokens || 1000,
         }
       };
 
-      // 调用Ollama API
+      // 调用Ollama Chat API
       const response = await fetch(`${this.baseUrl}/api/chat`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(ollamaRequest),
-        signal: request.config?.abortSignal
+        body: JSON.stringify(ollamaRequest)
       });
 
       if (!response.ok) {
         const errorText = await response.text();
-        throw new Error(`Ollama API error: ${response.status} ${errorText}`);
+        let errorMessage = `Ollama API call failed with status ${response.status}`;
+        
+        if (response.status === 404) {
+          errorMessage = 'Model not found. Please ensure the model is available locally. Use "ollama pull <model>" to download it.';
+        } else if (response.status === 500) {
+          errorMessage = 'Ollama server error. Please check if Ollama is running properly.';
+        }
+        
+        throw new Error(`${errorMessage}\nResponse: ${errorText}`);
       }
 
       const ollamaResponse = await response.json();
@@ -80,9 +89,41 @@ export class OllamaContentGenerator implements ContentGenerator {
     request: GenerateContentParameters,
     userPromptId: string,
   ): Promise<AsyncGenerator<GenerateContentResponse>> {
-    // 对于流式响应，先实现非流式版本然后模拟流式输出
-    const response = await this.generateContent(request, userPromptId);
-    return this.simulateStream(response);
+    try {
+      // 转换请求格式 - 使用chat API流式模式
+      const messages = this.convertGeminiToOllama(request.contents);
+      
+      const ollamaRequest = {
+        model: this.model,
+        messages,
+        stream: true, // 启用流式响应
+        options: {
+          temperature: request.config?.temperature || 0.7,
+          top_p: request.config?.topP || 0.9,
+          num_predict: request.config?.maxOutputTokens || 1000,
+        }
+      };
+
+      // 调用Ollama Chat API (流式)
+      const response = await fetch(`${this.baseUrl}/api/chat`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(ollamaRequest)
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(`Ollama streaming API call failed with status ${response.status}: ${errorText}`);
+      }
+
+      return this.parseStreamingResponse(response);
+
+    } catch (error) {
+      console.error('Ollama streaming API call failed:', error);
+      throw error;
+    }
   }
 
   async countTokens(request: CountTokensParameters): Promise<CountTokensResponse> {
@@ -98,6 +139,43 @@ export class OllamaContentGenerator implements ContentGenerator {
 
   async embedContent(request: EmbedContentParameters): Promise<EmbedContentResponse> {
     throw new Error('Embedding not supported by Ollama implementation');
+  }
+
+  private async *parseStreamingResponse(response: Response): AsyncGenerator<GenerateContentResponse> {
+    const reader = response.body?.getReader();
+    if (!reader) {
+      throw new Error('No response body reader available');
+    }
+
+    const decoder = new TextDecoder();
+    let buffer = '';
+
+    try {
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+
+        buffer += decoder.decode(value, { stream: true });
+        const lines = buffer.split('\n');
+        buffer = lines.pop() || '';
+
+        for (const line of lines) {
+          const trimmedLine = line.trim();
+          if (trimmedLine) {
+            try {
+              const chunk = JSON.parse(trimmedLine);
+              if (chunk.message && chunk.message.content !== undefined) {
+                yield this.convertOllamaChunkToGemini(chunk);
+              }
+            } catch (e) {
+              console.warn('Failed to parse streaming chunk:', e);
+            }
+          }
+        }
+      }
+    } finally {
+      reader.releaseLock();
+    }
   }
 
   private convertGeminiToOllama(contents: any): Array<{role: string, content: string}> {
@@ -131,7 +209,7 @@ export class OllamaContentGenerator implements ContentGenerator {
       candidates: [{
         content: {
           role: 'model',
-          parts: [{ text: ollamaResponse.message.content }],
+          parts: [{ text: ollamaResponse.message?.content || '' }],
         },
         finishReason: 'STOP' as any,
         index: 0,
@@ -144,27 +222,26 @@ export class OllamaContentGenerator implements ContentGenerator {
     } as GenerateContentResponse;
   }
 
-  private async* simulateStream(response: GenerateContentResponse): AsyncGenerator<GenerateContentResponse> {
-    const content = response.candidates?.[0]?.content?.parts?.[0]?.text || '';
-    const words = content.split(' ');
-    const chunkSize = 3; // 每次返回3个单词
-
-    for (let i = 0; i < words.length; i += chunkSize) {
-      const chunk = words.slice(i, i + chunkSize).join(' ');
-      
-      yield {
-        candidates: [{
-          content: {
-            role: 'model',
-            parts: [{ text: chunk + (i + chunkSize < words.length ? ' ' : '') }],
-          },
-          finishReason: 'STOP' as any,
-          index: 0,
-        }],
-      } as GenerateContentResponse;
-
-      // 添加小延迟以模拟流式输出
-      await new Promise(resolve => setTimeout(resolve, 50));
-    }
+  private convertOllamaChunkToGemini(chunk: any): any {
+    return {
+      candidates: [{
+        content: {
+          role: 'model',
+          parts: [{ text: chunk.message?.content || '' }],
+        },
+        finishReason: chunk.done ? 'STOP' as any : undefined,
+        index: 0,
+      }],
+      usageMetadata: chunk.done ? {
+        promptTokenCount: chunk.prompt_eval_count || 0,
+        candidatesTokenCount: chunk.eval_count || 0,
+        totalTokenCount: (chunk.prompt_eval_count || 0) + (chunk.eval_count || 0),
+      } : {
+        promptTokenCount: 0,
+        candidatesTokenCount: 0,
+        totalTokenCount: 0,
+      },
+    } as GenerateContentResponse;
   }
+
 }

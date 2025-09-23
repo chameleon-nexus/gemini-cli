@@ -8,6 +8,7 @@ Gemini CLI 现在支持多个AI引擎，通过统一的接口访问不同的AI�
 - **OpenRouter** - 多模型路由服务
 - **Azure OpenAI** - 微软Azure OpenAI服务
 - **DashScope** - 阿里云通义千问
+- **Bailian** - 阿里云百炼（通义千问OpenAI兼容模式）
 - **GLM** - 智谱AI GLM系列模型
 - **Ollama** - 本地AI模型
 
@@ -23,6 +24,7 @@ $env:AI_ENGINE="volcengine"    # 火山引擎（默认）
 $env:AI_ENGINE="openrouter"    # OpenRouter
 $env:AI_ENGINE="azure"         # Azure OpenAI
 $env:AI_ENGINE="dashscope"     # 阿里云DashScope
+$env:AI_ENGINE="bailian"       # 阿里云百炼
 $env:AI_ENGINE="glm"           # 智谱AI GLM
 $env:AI_ENGINE="ollama"        # Ollama本地模型
 
@@ -30,13 +32,34 @@ $env:AI_ENGINE="ollama"        # Ollama本地模型
 export AI_ENGINE="volcengine"
 ```
 
-### 2. 引擎特定配置
+### 2. 统一环境变量配置（推荐）
+
+**🎯 统一配置方式** - 所有引擎使用相同的环境变量：
+
+```bash
+# 统一API密钥（所有引擎通用）
+$env:AI_API_KEY="your_api_key_here"
+
+# 统一模型名称（所有引擎通用）
+$env:AI_MODEL="your_model_name"
+
+# 统一Base URL（可选，仅当需要自定义URL时设置）
+$env:AI_BASE_URL="your_custom_url"
+
+# 引擎选择
+$env:AI_ENGINE="volcengine|openrouter|azure|dashscope|bailian|glm|ollama"
+```
+
+### 3. 引擎特定配置（向后兼容）
 
 #### Volcengine（火山引擎）
 ```bash
 $env:VOLCENGINE_API_KEY="your_api_key_here"
 # 或者使用兼容的环境变量（向后兼容）
 $env:GEMINI_API_KEY="your_api_key_here"
+# 或者使用统一变量
+$env:AI_API_KEY="your_api_key_here"
+
 $env:VOLCENGINE_BASE_URL="https://ark.cn-beijing.volces.com/api/v3"  # 可选
 $env:VOLCENGINE_MODEL="deepseek-v3-250324"  # 可选
 ```
@@ -47,12 +70,19 @@ $env:OPENROUTER_API_KEY="your_api_key_here"
 $env:OPENROUTER_MODEL="anthropic/claude-3.5-sonnet"  # 可选
 ```
 
-#### Azure OpenAI
+#### Azure OpenAI / Azure AI Foundry
 ```bash
-$env:AZURE_BASE_URL="https://your-resource.openai.azure.com/"
-$env:AZURE_API_KEY="your_api_key_here"
-$env:AZURE_MODEL="gpt-4"  # 可选
-$env:AZURE_API_VERSION="2024-02-15-preview"  # 可选
+# Azure OpenAI 传统服务
+$env:AZURE_BASE_URL="https://your-resource.openai.azure.com"
+$env:AZURE_API_KEY="your_api_key_here"  # 从Azure OpenAI Studio获取
+$env:AZURE_MODEL="gpt-4"  # 部署名称
+$env:AZURE_API_VERSION="2024-10-21"  # 可选，默认使用最新版本
+
+# Azure AI Foundry 新服务
+$env:AZURE_BASE_URL="https://your-resource.services.ai.azure.com"
+$env:AZURE_API_KEY="your_access_token"  # 使用 az account get-access-token 获取
+$env:AZURE_MODEL="gpt-4o"  # 模型名称
+$env:AZURE_API_VERSION="2024-10-21"  # 可选
 ```
 
 #### 阿里云DashScope
@@ -61,6 +91,21 @@ $env:DASHSCOPE_API_KEY="your_api_key_here"
 # 或者使用兼容的环境变量
 $env:ALIBABA_CLOUD_API_KEY="your_api_key_here"
 $env:DASHSCOPE_MODEL="qwen-plus"  # 可选
+```
+
+#### 阿里云百炼（Bailian）
+```bash
+# 推荐：使用通用环境变量
+$env:AI_API_KEY="your_api_key_here"
+$env:AI_MODEL="qwen-plus"  # 可选，支持qwen-plus, qwen-turbo等
+$env:AI_BASE_URL="https://dashscope.aliyuncs.com/compatible-mode/v1"  # 可选
+
+# 或者使用兼容的环境变量
+$env:DASHSCOPE_API_KEY="your_api_key_here"
+$env:ALIBABA_CLOUD_API_KEY="your_api_key_here"
+$env:BAILIAN_API_KEY="your_api_key_here"
+$env:BAILIAN_MODEL="qwen-plus"  # 可选
+$env:BAILIAN_BASE_URL="https://dashscope.aliyuncs.com/compatible-mode/v1"  # 可选
 ```
 
 #### 智谱AI GLM
@@ -80,13 +125,58 @@ $env:OLLAMA_MODEL="llama3.2:latest"  # 可选
 
 ## 📝 使用示例
 
-### 基本使用
+### 统一配置方式（推荐）
+
+**🎯 最简单的配置方式** - 只需要设置3个环境变量：
+
+```bash
+# 1. 选择AI引擎
+$env:AI_ENGINE="volcengine"  # 或 openrouter, azure, dashscope, glm, ollama
+
+# 2. 设置API密钥（所有引擎通用）
+$env:AI_API_KEY="your_api_key_here"
+
+# 3. 设置模型名称（可选，有默认值）
+$env:AI_MODEL="your_model_name"
+
+# 4. 运行
+gemini
+```
+
+**实际使用示例：**
+
+```bash
+# 使用火山引擎
+$env:AI_ENGINE="volcengine"
+$env:AI_API_KEY="b59bd5ec-0361-4b5c-aea3-44ad7f239227"
+gemini
+
+# 使用OpenRouter
+$env:AI_ENGINE="openrouter"
+$env:AI_API_KEY="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"
+$env:AI_MODEL="anthropic/claude-3.5-sonnet"
+gemini
+
+# 使用Azure OpenAI
+$env:AI_ENGINE="azure"
+$env:AI_API_KEY="your-azure-api-key"
+$env:AI_BASE_URL="https://your-resource.openai.azure.com"
+$env:AI_MODEL="your-deployment-name"
+gemini
+```
+
+### 传统配置方式（向后兼容）
+
 ```bash
 # 使用默认引擎（Volcengine）
 gemini
 
 # 使用指定引擎
 $env:AI_ENGINE="openrouter"
+gemini
+
+# 使用阿里云百炼
+$env:AI_ENGINE="bailian"
 gemini
 
 # 使用智谱AI GLM
@@ -136,6 +226,7 @@ packages/core/src/core/
 ├── openrouterContentGenerator.ts    # OpenRouter适配器
 ├── azureContentGenerator.ts         # Azure OpenAI适配器
 ├── dashscopeContentGenerator.ts     # DashScope适配器
+├── bailianContentGenerator.ts       # 阿里云百炼适配器
 ├── glmContentGenerator.ts           # 智谱AI GLM适配器
 └── ollamaContentGenerator.ts        # Ollama适配器
 ```
@@ -150,14 +241,16 @@ packages/core/src/core/
 |------|-------------|-------------|------|
 | **Volcengine** | `VOLCENGINE_API_KEY` | `GEMINI_API_KEY` | 向后兼容原有的Gemini配置 |
 | **DashScope** | `DASHSCOPE_API_KEY` | `ALIBABA_CLOUD_API_KEY` | 支持阿里云通用API密钥 |
+| **Bailian** | `AI_API_KEY` | `DASHSCOPE_API_KEY`, `ALIBABA_CLOUD_API_KEY`, `BAILIAN_API_KEY` | 优先使用通用密钥，兼容阿里云密钥 |
 | **GLM** | `GLM_API_KEY` | `ZHIPU_API_KEY` | 支持智谱AI的通用命名 |
 
 ### 配置优先级
 
 系统会按以下顺序查找API密钥：
-1. 主要环境变量（如 `VOLCENGINE_API_KEY`）
-2. 兼容环境变量（如 `GEMINI_API_KEY`）
-3. 如果都未找到，则抛出错误
+1. 通用环境变量（如 `AI_API_KEY`）
+2. 引擎特定环境变量（如 `VOLCENGINE_API_KEY`）
+3. 兼容环境变量（如 `GEMINI_API_KEY`）
+4. 如果都未找到，则抛出错误
 
 ## 🚨 故障排除
 
@@ -193,6 +286,7 @@ $env:DEBUG="true"
 - [OpenRouter文档](https://openrouter.ai/docs)
 - [Azure OpenAI文档](https://docs.microsoft.com/en-us/azure/cognitive-services/openai/)
 - [阿里云DashScope文档](https://help.aliyun.com/zh/dashscope/)
+- [阿里云百炼文档](https://help.aliyun.com/zh/model-studio/)
 - [智谱AI GLM文档](https://open.bigmodel.cn/dev/api)
 - [Ollama文档](https://ollama.ai/docs)
 

@@ -24,11 +24,12 @@ export class GlmContentGenerator implements ContentGenerator {
   private readonly model: string;
 
   constructor() {
-    this.baseUrl = process.env['GLM_BASE_URL'] || 'https://open.bigmodel.cn/api/paas/v4';
-    this.apiKey = process.env['GLM_API_KEY'] || process.env['ZHIPU_API_KEY'] || (() => {
-      throw new Error('API key not found. Please set GLM_API_KEY or ZHIPU_API_KEY environment variable.');
+    // 统一环境变量支持，优先使用引擎特定变量，fallback到通用变量
+    this.baseUrl = process.env['GLM_BASE_URL'] || process.env['AI_BASE_URL'] || 'https://open.bigmodel.cn/api/paas/v4';
+    this.apiKey = process.env['GLM_API_KEY'] || process.env['ZHIPU_API_KEY'] || process.env['AI_API_KEY'] || (() => {
+      throw new Error('API key not found. Please set one of: GLM_API_KEY, ZHIPU_API_KEY, or AI_API_KEY environment variable.');
     })();
-    this.model = process.env['GLM_MODEL'] || 'glm-4';
+    this.model = process.env['GLM_MODEL'] || process.env['AI_MODEL'] || 'glm-4';
     
     console.log('🧠 智谱AI GLM ContentGenerator: Initialized successfully');
     console.log(`   Model: ${this.model}`);

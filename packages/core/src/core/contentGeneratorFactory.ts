@@ -11,6 +11,7 @@ import { AzureContentGenerator } from './azureContentGenerator.js';
 import { DashscopeContentGenerator } from './dashscopeContentGenerator.js';
 import { OllamaContentGenerator } from './ollamaContentGenerator.js';
 import { GlmContentGenerator } from './glmContentGenerator.js';
+import { BailianContentGenerator } from './bailianContentGenerator.js';
 import { 
   DEFAULT_AI_ENGINE, 
   SUPPORTED_ENGINES, 
@@ -66,6 +67,10 @@ export class ContentGeneratorFactory {
              case 'glm':
                console.log('🧠 智谱AI GLM Adapter: Initializing...');
                return new GlmContentGenerator();
+               
+             case 'bailian':
+               console.log('🌊 阿里云百炼 Adapter: Initializing...');
+               return new BailianContentGenerator();
                
              case 'openai':
                throw new Error('OpenAI engine not implemented yet. Please use openrouter or azure.');

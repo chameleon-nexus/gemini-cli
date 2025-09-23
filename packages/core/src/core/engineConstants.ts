@@ -23,6 +23,7 @@ export const SUPPORTED_ENGINES = [
   'azure',
   'dashscope',
   'glm',
+  'bailian',
   'ollama'
 ] as const;
 
@@ -72,6 +73,11 @@ export const ENGINE_DEFAULTS = {
     baseUrl: 'https://open.bigmodel.cn/api/paas/v4',
     model: 'glm-4',
     apiKeyEnv: ['GLM_API_KEY', 'ZHIPU_API_KEY']
+  },
+  bailian: {
+    baseUrl: 'https://dashscope.aliyuncs.com/compatible-mode/v1',
+    model: 'qwen-plus',
+    apiKeyEnv: ['AI_API_KEY', 'DASHSCOPE_API_KEY', 'ALIBABA_CLOUD_API_KEY', 'BAILIAN_API_KEY']
   },
   ollama: {
     baseUrl: 'http://localhost:11434',

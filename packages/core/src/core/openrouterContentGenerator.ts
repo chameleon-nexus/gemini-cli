@@ -24,11 +24,12 @@ export class OpenrouterContentGenerator implements ContentGenerator {
   private readonly model: string;
 
   constructor() {
-    this.baseUrl = process.env['OPENROUTER_BASE_URL'] || 'https://openrouter.ai/api/v1';
-    this.apiKey = process.env['OPENROUTER_API_KEY'] || (() => {
-      throw new Error('API key not found. Please set OPENROUTER_API_KEY environment variable.');
+    // 统一环境变量支持，优先使用引擎特定变量，fallback到通用变量
+    this.baseUrl = process.env['OPENROUTER_BASE_URL'] || process.env['AI_BASE_URL'] || 'https://openrouter.ai/api/v1';
+    this.apiKey = process.env['OPENROUTER_API_KEY'] || process.env['AI_API_KEY'] || (() => {
+      throw new Error('API key not found. Please set one of: OPENROUTER_API_KEY or AI_API_KEY environment variable.');
     })();
-    this.model = process.env['OPENROUTER_MODEL'] || 'anthropic/claude-3.5-sonnet';
+    this.model = process.env['OPENROUTER_MODEL'] || process.env['AI_MODEL'] || 'anthropic/claude-3.5-sonnet';
     
     console.log('🌐 OpenRouter ContentGenerator: Initialized successfully');
     console.log(`   Model: ${this.model}`);

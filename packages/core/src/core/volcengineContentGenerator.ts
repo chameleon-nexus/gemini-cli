@@ -62,12 +62,12 @@ export class VolcengineContentGenerator implements ContentGenerator {
   private readonly model: string;
 
   constructor() {
-    // 使用环境变量配置
-    this.baseUrl = process.env['VOLCENGINE_BASE_URL'] || 'https://ark.cn-beijing.volces.com/api/v3';
-    this.apiKey = process.env['VOLCENGINE_API_KEY'] || process.env['GEMINI_API_KEY'] || (() => {
-      throw new Error('API key not found. Please set VOLCENGINE_API_KEY or GEMINI_API_KEY environment variable.');
+    // 统一环境变量支持，优先使用引擎特定变量，fallback到通用变量
+    this.baseUrl = process.env['VOLCENGINE_BASE_URL'] || process.env['AI_BASE_URL'] || 'https://ark.cn-beijing.volces.com/api/v3';
+    this.apiKey = process.env['VOLCENGINE_API_KEY'] || process.env['GEMINI_API_KEY'] || process.env['AI_API_KEY'] || (() => {
+      throw new Error('API key not found. Please set one of: VOLCENGINE_API_KEY, GEMINI_API_KEY, or AI_API_KEY environment variable.');
     })();
-    this.model = process.env['VOLCENGINE_MODEL'] || 'deepseek-v3-250324';
+    this.model = process.env['VOLCENGINE_MODEL'] || process.env['AI_MODEL'] || 'deepseek-v3-250324';
     
     console.log(`🔥 Volcengine ContentGenerator: Initialized successfully`);
     console.log(`   Model: ${this.model}`);

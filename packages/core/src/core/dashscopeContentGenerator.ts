@@ -24,11 +24,12 @@ export class DashscopeContentGenerator implements ContentGenerator {
   private readonly model: string;
 
   constructor() {
-    this.baseUrl = process.env['DASHSCOPE_BASE_URL'] || 'https://dashscope.aliyuncs.com/api/v1';
-    this.apiKey = process.env['DASHSCOPE_API_KEY'] || process.env['ALIBABA_CLOUD_API_KEY'] || (() => {
-      throw new Error('API key not found. Please set DASHSCOPE_API_KEY or ALIBABA_CLOUD_API_KEY environment variable.');
+    // 统一环境变量支持，优先使用引擎特定变量，fallback到通用变量
+    this.baseUrl = process.env['DASHSCOPE_BASE_URL'] || process.env['AI_BASE_URL'] || 'https://dashscope.aliyuncs.com/api/v1';
+    this.apiKey = process.env['DASHSCOPE_API_KEY'] || process.env['ALIBABA_CLOUD_API_KEY'] || process.env['AI_API_KEY'] || (() => {
+      throw new Error('API key not found. Please set one of: DASHSCOPE_API_KEY, ALIBABA_CLOUD_API_KEY, or AI_API_KEY environment variable.');
     })();
-    this.model = process.env['DASHSCOPE_MODEL'] || 'qwen-plus';
+    this.model = process.env['DASHSCOPE_MODEL'] || process.env['AI_MODEL'] || 'qwen-plus';
     
     console.log('🌊 阿里云DashScope ContentGenerator: Initialized successfully');
     console.log(`   Model: ${this.model}`);
