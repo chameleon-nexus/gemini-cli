@@ -54,17 +54,17 @@ test_engine() {
 }
 
 # 测试所有引擎
-echo "🔥 Testing Volcengine (DeepSeek V3)..."
-test_engine "volcengine" "deepseek-v3-250324" "sk-1234567890abcdef1234567890abcdef" "" "请介绍一下你自己，你是哪个AI模型？请用中文回答。"
-
 echo "🌐 Testing OpenRouter (Claude 3.5 Sonnet)..."
 test_engine "openrouter" "anthropic/claude-3.5-sonnet" "sk-or-v1-1234567890abcdef1234567890abcdef" "" "Hello, please introduce yourself and tell me which AI model you are. Please respond in English."
 
 echo "☁️ Testing Azure OpenAI (GPT-4)..."
 test_engine "azure" "gpt-4" "sk-1234567890abcdef1234567890abcdef" "https://your-resource.openai.azure.com" "Hello, please introduce yourself and tell me which AI model you are. Please respond in English."
 
-echo "🌊 Testing DashScope (Qwen Plus)..."
-test_engine "dashscope" "qwen-plus" "sk-1234567890abcdef1234567890abcdef" "" "你好，请介绍一下你自己，你是哪个AI模型？请用中文回答。"
+echo "🦙 Testing Ollama (Llama 3.2)..."
+test_engine "ollama" "llama3.2:latest" "" "http://localhost:11434" "Hello, please introduce yourself and tell me which AI model you are. Please respond in English."
+
+echo "🔥 Testing Volcengine (DeepSeek V3)..."
+test_engine "volcengine" "deepseek-v3-250324" "sk-1234567890abcdef1234567890abcdef" "" "请介绍一下你自己，你是哪个AI模型？请用中文回答。"
 
 echo "🌊 Testing Bailian (Qwen Plus)..."
 test_engine "bailian" "qwen-plus" "sk-1234567890abcdef1234567890abcdef" "" "你好，请介绍一下你自己，你是哪个AI模型？请用中文回答。"
@@ -75,6 +75,8 @@ test_engine "glm" "glm-4" "sk-1234567890abcdef1234567890abcdef" "" "你好，请
 echo "🦙 Testing Ollama (Llama 3.2)..."
 # 检查Ollama是否运行
 if curl -s http://localhost:11434/api/tags > /dev/null; then
+    echo "✅ Ollama is running"
+    echo ""
     test_engine "ollama" "llama3.2:latest" "" "http://localhost:11434" "Hello, please introduce yourself and tell me which AI model you are. Please respond in English."
 else
     echo -e "${YELLOW}⚠️ Ollama is not running, skipping Ollama test${NC}"
@@ -87,10 +89,9 @@ fi
 echo -e "${GREEN}🎉 All engine tests completed!${NC}"
 echo ""
 echo "To run individual engine tests:"
-echo "  ./test-volcengine.sh"
 echo "  ./test-openrouter.sh"
 echo "  ./test-azure.sh"
-echo "  ./test-dashscope.sh"
+echo "  ./test-ollama.sh"
+echo "  ./test-volcengine.sh"
 echo "  ./test-bailian.sh"
 echo "  ./test-glm.sh"
-echo "  ./test-ollama.sh"

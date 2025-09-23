@@ -3,13 +3,13 @@
 [![npm version](https://badge.fury.io/js/%40chameleon-nexus-tech%2Fgemini-cli.svg)](https://badge.fury.io/js/%40chameleon-nexus-tech%2Fgemini-cli)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
-**🚀 World's First Unified CLI Tool Supporting 7 Major AI Engines - One Command, All Models**
+**🚀 World's First Unified CLI Tool Supporting 6 Major AI Engines - One Command, All Models**
 
 > ⚠️ **Important Notice**: This is a modified version of [Google Gemini CLI](https://github.com/google-gemini/gemini-cli). Original project copyright belongs to Google LLC under Apache 2.0 License.
 
 ## 🌟 Core Features
 
-- 🎯 **7 Major AI Engines**: Volcengine, OpenRouter, Azure, DashScope, Bailian, GLM, Ollama
+- 🎯 **6 Major AI Engines**: OpenRouter, Azure, Ollama, Volcengine, Bailian, GLM
 - 🔄 **Unified Environment Variables**: One configuration for all engines
 - 🌍 **Global Model Coverage**: Supports GPT, Claude, Qwen, GLM, DeepSeek and other mainstream models
 - 🏠 **Local AI Support**: Ollama local deployment with complete data privacy
@@ -23,13 +23,6 @@ npm install -g @chameleon-nexus-tech/gemini-cli
 ```
 
 ## 🎛️ Supported AI Engines & Models
-
-### 🔥 Volcengine (Default Engine)
-**Supported Models**: DeepSeek V3, Qwen Series, ChatGLM, Baichuan, etc.
-- `deepseek-v3-250324` (default)
-- `qwen-plus`
-- `qwen-max`
-- `chatglm-6b`
 
 ### 🌐 OpenRouter (Multi-Model Router)
 **Supported Models**: GPT-4, Claude, Llama, Mistral, etc.
@@ -45,12 +38,19 @@ npm install -g @chameleon-nexus-tech/gemini-cli
 - `gpt-4-turbo`
 - `dall-e-3`
 
-### 🌊 DashScope (Alibaba Cloud Qwen)
-**Supported Models**: Qwen Series, Multimodal Models
-- `qwen-plus` (default)
+### 🦙 Ollama (Local AI)
+**Supported Models**: Llama, Mistral, CodeLlama, etc.
+- `llama3.2:latest` (default)
+- `mistral:latest`
+- `codellama:latest`
+- `qwen:latest`
+
+### 🔥 Volcengine (Default Engine)
+**Supported Models**: DeepSeek V3, Qwen Series, ChatGLM, Baichuan, etc.
+- `deepseek-v3-250324` (default)
+- `qwen-plus`
 - `qwen-max`
-- `qwen-vl-plus`
-- `qwen-audio-turbo`
+- `chatglm-6b`
 
 ### 🌊 Bailian (Alibaba Cloud Bailian)
 **Supported Models**: Qwen Commercial Edition, Multimodal Models
@@ -63,13 +63,6 @@ npm install -g @chameleon-nexus-tech/gemini-cli
 - `glm-4` (default)
 - `glm-4v`
 - `cogview-3`
-
-### 🦙 Ollama (Local AI)
-**Supported Models**: Llama, Mistral, CodeLlama, etc.
-- `llama3.2:latest` (default)
-- `mistral:latest`
-- `codellama:latest`
-- `qwen:latest`
 
 ## ⚙️ Unified Configuration System
 
@@ -86,7 +79,7 @@ export AI_MODEL="your-model-name"
 export AI_BASE_URL="your-custom-url"
 
 # Engine Selection (one variable controls all)
-export AI_ENGINE="volcengine"  # Options: volcengine, openrouter, azure, dashscope, bailian, glm, ollama
+export AI_ENGINE="volcengine"  # Options: openrouter, azure, ollama, volcengine, bailian, glm
 ```
 
 ### 🪟 Windows PowerShell Configuration
@@ -103,10 +96,6 @@ $env:AI_ENGINE="volcengine"
 If using engine-specific configuration, the system will automatically fallback to unified configuration:
 
 ```bash
-# Volcengine specific configuration
-export VOLCENGINE_API_KEY="volcengine-key"
-export VOLCENGINE_MODEL="deepseek-v3-250324"
-
 # OpenRouter specific configuration  
 export OPENROUTER_API_KEY="openrouter-key"
 export OPENROUTER_MODEL="anthropic/claude-3.5-sonnet"
@@ -115,6 +104,10 @@ export OPENROUTER_MODEL="anthropic/claude-3.5-sonnet"
 export AZURE_API_KEY="azure-key"
 export AZURE_BASE_URL="https://your-resource.openai.azure.com"
 export AZURE_MODEL="gpt-4"
+
+# Volcengine specific configuration
+export VOLCENGINE_API_KEY="volcengine-key"
+export VOLCENGINE_MODEL="deepseek-v3-250324"
 ```
 
 ## 🚀 Usage
@@ -134,18 +127,6 @@ gemini
 Then select "2. Use Gemini API Key" and press Enter to start chatting.
 
 ## 🧪 Engine Testing Examples
-
-### 🔥 Testing Volcengine (Default Engine)
-
-```bash
-# Using unified configuration
-export AI_API_KEY="sk-1234567890abcdef1234567890abcdef"
-export AI_ENGINE="volcengine"
-export AI_MODEL="deepseek-v3-250324"
-
-# Test command
-gemini "Please introduce yourself and tell me which AI model you are."
-```
 
 ### 🌐 Testing OpenRouter
 
@@ -172,13 +153,25 @@ export AI_MODEL="gpt-4"
 gemini "Hello, please introduce yourself and tell me which AI model you are."
 ```
 
-### 🌊 Testing DashScope
+### 🦙 Testing Ollama (Local AI)
+
+```bash
+# Using unified configuration
+export AI_ENGINE="ollama"
+export AI_BASE_URL="http://localhost:11434"
+export AI_MODEL="llama3.2:latest"
+
+# Test command
+gemini "Hello, please introduce yourself and tell me which AI model you are."
+```
+
+### 🔥 Testing Volcengine (Default Engine)
 
 ```bash
 # Using unified configuration
 export AI_API_KEY="sk-1234567890abcdef1234567890abcdef"
-export AI_ENGINE="dashscope"
-export AI_MODEL="qwen-plus"
+export AI_ENGINE="volcengine"
+export AI_MODEL="deepseek-v3-250324"
 
 # Test command
 gemini "Please introduce yourself and tell me which AI model you are."
@@ -208,18 +201,6 @@ export AI_MODEL="glm-4"
 gemini "Please introduce yourself and tell me which AI model you are."
 ```
 
-### 🦙 Testing Ollama (Local AI)
-
-```bash
-# Using unified configuration
-export AI_ENGINE="ollama"
-export AI_BASE_URL="http://localhost:11434"
-export AI_MODEL="llama3.2:latest"
-
-# Test command
-gemini "Hello, please introduce yourself and tell me which AI model you are."
-```
-
 ## 🔧 Quick Engine Switching
 
 ```bash
@@ -237,6 +218,11 @@ gemini "Hello GPT-4!"
 export AI_ENGINE="ollama"
 export AI_MODEL="llama3.2:latest"
 gemini "Hello Llama!"
+
+# Switch to Volcengine using DeepSeek
+export AI_ENGINE="volcengine"
+export AI_MODEL="deepseek-v3-250324"
+gemini "Hello DeepSeek!"
 ```
 
 ## 🏗️ Technical Architecture
@@ -247,18 +233,17 @@ This project uses **Factory Pattern** design to achieve highly scalable multi-AI
 
 ```
 ContentGeneratorFactory
-├── VolcengineContentGenerator    (Volcengine)
 ├── OpenrouterContentGenerator    (OpenRouter)
 ├── AzureContentGenerator         (Azure OpenAI)
-├── DashscopeContentGenerator     (Alibaba Cloud DashScope)
+├── OllamaContentGenerator        (Local Ollama)
+├── VolcengineContentGenerator    (Volcengine)
 ├── BailianContentGenerator       (Alibaba Cloud Bailian)
-├── GlmContentGenerator           (Zhipu AI GLM)
-└── OllamaContentGenerator        (Local Ollama)
+└── GlmContentGenerator           (Zhipu AI GLM)
 ```
 
 ### 🔧 Core Features
 
-✅ **7 Major AI Engines**: Unified management of all AI engines through factory pattern  
+✅ **6 Major AI Engines**: Unified management of all AI engines through factory pattern  
 ✅ **Unified Environment Variables**: `AI_API_KEY`, `AI_MODEL`, `AI_BASE_URL` universal configuration  
 ✅ **Automatic Format Conversion**: Seamless conversion between Gemini format and engine API formats  
 ✅ **Streaming Response Support**: All engines support both streaming and non-streaming responses  
@@ -274,13 +259,12 @@ packages/core/src/core/
 ├── contentGeneratorFactory.ts       # Multi-engine factory class
 ├── engineConstants.ts               # Engine configuration constants
 ├── engineConfig.ts                  # Configuration manager
-├── volcengineContentGenerator.ts    # Volcengine adapter
 ├── openrouterContentGenerator.ts    # OpenRouter adapter
 ├── azureContentGenerator.ts         # Azure OpenAI adapter
-├── dashscopeContentGenerator.ts     # DashScope adapter
+├── ollamaContentGenerator.ts        # Ollama adapter
+├── volcengineContentGenerator.ts    # Volcengine adapter
 ├── bailianContentGenerator.ts       # Bailian adapter
-├── glmContentGenerator.ts           # GLM adapter
-└── ollamaContentGenerator.ts        # Ollama adapter
+└── glmContentGenerator.ts           # GLM adapter
 ```
 
 ### 🔄 API Format Conversion
@@ -336,19 +320,6 @@ If you're migrating from the original Google Gemini CLI:
 
 Ready-to-use test scripts are provided for each engine:
 
-### 🔥 Volcengine Test Script
-
-```bash
-#!/bin/bash
-# test-volcengine.sh
-export AI_API_KEY="sk-1234567890abcdef1234567890abcdef"
-export AI_ENGINE="volcengine"
-export AI_MODEL="deepseek-v3-250324"
-
-echo "Testing Volcengine with DeepSeek V3..."
-gemini "Please introduce yourself and tell me which AI model you are."
-```
-
 ### 🌐 OpenRouter Test Script
 
 ```bash
@@ -376,16 +347,29 @@ echo "Testing Azure OpenAI with GPT-4..."
 gemini "Hello, please introduce yourself and tell me which AI model you are."
 ```
 
-### 🌊 DashScope Test Script
+### 🦙 Ollama Test Script
 
 ```bash
 #!/bin/bash
-# test-dashscope.sh
-export AI_API_KEY="sk-1234567890abcdef1234567890abcdef"
-export AI_ENGINE="dashscope"
-export AI_MODEL="qwen-plus"
+# test-ollama.sh
+export AI_ENGINE="ollama"
+export AI_BASE_URL="http://localhost:11434"
+export AI_MODEL="llama3.2:latest"
 
-echo "Testing DashScope with Qwen Plus..."
+echo "Testing Ollama with Llama 3.2..."
+gemini "Hello, please introduce yourself and tell me which AI model you are."
+```
+
+### 🔥 Volcengine Test Script
+
+```bash
+#!/bin/bash
+# test-volcengine.sh
+export AI_API_KEY="sk-1234567890abcdef1234567890abcdef"
+export AI_ENGINE="volcengine"
+export AI_MODEL="deepseek-v3-250324"
+
+echo "Testing Volcengine with DeepSeek V3..."
 gemini "Please introduce yourself and tell me which AI model you are."
 ```
 
@@ -415,43 +399,29 @@ echo "Testing GLM with GLM-4..."
 gemini "Please introduce yourself and tell me which AI model you are."
 ```
 
-### 🦙 Ollama Test Script
-
-```bash
-#!/bin/bash
-# test-ollama.sh
-export AI_ENGINE="ollama"
-export AI_BASE_URL="http://localhost:11434"
-export AI_MODEL="llama3.2:latest"
-
-echo "Testing Ollama with Llama 3.2..."
-gemini "Hello, please introduce yourself and tell me which AI model you are."
-```
-
 ### 🚀 All Engines Test Script
 
 ```bash
 #!/bin/bash
 # test-all-engines.sh
 # Comprehensive test for all supported engines
-./test-volcengine.sh
 ./test-openrouter.sh
 ./test-azure.sh
-./test-dashscope.sh
+./test-ollama.sh
+./test-volcengine.sh
 ./test-bailian.sh
 ./test-glm.sh
-./test-ollama.sh
 ```
 
 ## 🔗 Related Links
 
 - [Original Project (Google Gemini CLI)](https://github.com/google-gemini/gemini-cli)
-- [Volcengine AI Platform](https://www.volcengine.com/products/ai)
 - [OpenRouter](https://openrouter.ai/)
 - [Azure OpenAI](https://azure.microsoft.com/en-us/products/ai-services/openai-service)
-- [Alibaba Cloud DashScope](https://dashscope.aliyun.com/)
-- [Zhipu AI](https://www.zhipuai.cn/)
 - [Ollama](https://ollama.ai/)
+- [Volcengine AI Platform](https://www.volcengine.com/products/ai)
+- [Alibaba Cloud Bailian](https://bailian.console.aliyun.com/)
+- [Zhipu AI](https://www.zhipuai.cn/)
 - [Apache 2.0 License](https://www.apache.org/licenses/LICENSE-2.0)
 
 ## 🐛 Issue Reporting
@@ -493,7 +463,7 @@ Contributions are welcome! Please ensure:
 
 ## 🌟 Project Highlights
 
-- 🚀 **World's First**: First unified CLI tool supporting 7 major AI engines
+- 🚀 **World's First**: First unified CLI tool supporting 6 major AI engines
 - 🎯 **Zero Learning Cost**: One command, all models
 - 🔄 **Smart Switching**: Environment variable controlled, second-level engine switching
 - 🌍 **Global Coverage**: Supports mainstream AI models from US, China, and Europe
@@ -502,4 +472,4 @@ Contributions are welcome! Please ensure:
 
 ---
 
-**Disclaimer**: This project is not affiliated with Google, Volcengine, OpenRouter, Azure, Alibaba Cloud, Zhipu AI, Ollama, or any other companies. Please comply with the terms of service of the respective platforms when using this software.
+**Disclaimer**: This project is not affiliated with Google, OpenRouter, Azure, Ollama, Volcengine, Alibaba Cloud, Zhipu AI, or any other companies. Please comply with the terms of service of the respective platforms when using this software.
