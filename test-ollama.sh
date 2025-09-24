@@ -30,3 +30,4 @@ echo ""
 # 执行测试
 gemini "Hello, please introduce yourself and tell me which AI model you are. Please respond in English."
 
+
