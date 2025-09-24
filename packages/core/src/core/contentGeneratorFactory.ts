@@ -4,11 +4,15 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+/**
+ * @author chameleon-nexus
+ * @email mythicscribe2014@gmail.com
+ */
+
 import type { ContentGenerator } from './contentGenerator.js';
 import { VolcengineContentGenerator } from './volcengineContentGenerator.js';
 import { OpenrouterContentGenerator } from './openrouterContentGenerator.js';
 import { AzureContentGenerator } from './azureContentGenerator.js';
-import { DashscopeContentGenerator } from './dashscopeContentGenerator.js';
 import { OllamaContentGenerator } from './ollamaContentGenerator.js';
 import { GlmContentGenerator } from './glmContentGenerator.js';
 import { BailianContentGenerator } from './bailianContentGenerator.js';
@@ -21,24 +25,24 @@ import {
 } from './engineConstants.js';
 
 /**
- * AI引擎类型定义
- * 使用统一的常量定义
+ * AI Engine type definitions
+ * Using unified constant definitions
  */
 export type AiEngine = AllEngine;
 
 /**
- * ContentGenerator工厂类
- * 根据环境变量创建对应的ContentGenerator实例
- * 设计为易于扩展的工厂模式
+ * ContentGenerator Factory Class
+ * Creates corresponding ContentGenerator instances based on environment variables
+ * Designed as an easily extensible factory pattern
  */
 export class ContentGeneratorFactory {
   /**
-   * 根据环境变量创建并返回一个ContentGenerator实例
-   * @param engineType 可选的引擎类型，如果不提供则从环境变量读取
-   * @returns ContentGenerator实例
+   * Creates and returns a ContentGenerator instance based on environment variables
+   * @param engineType Optional engine type, if not provided, reads from environment variables
+   * @returns ContentGenerator instance
    */
   static createContentGenerator(engineType?: AiEngine): ContentGenerator {
-    // 优先使用传入的参数，其次使用环境变量，最后使用默认值
+    // Prioritize passed parameters, then environment variables, finally default values
     const engine = (engineType || process.env['AI_ENGINE'] || DEFAULT_AI_ENGINE).toLowerCase() as AiEngine;
 
     console.log(`🚀 Multi-Engine Support: Using ${engine.toUpperCase()} AI Engine`);
@@ -56,20 +60,17 @@ export class ContentGeneratorFactory {
         console.log('☁️ Azure OpenAI Adapter: Initializing...');
         return new AzureContentGenerator();
         
-      case 'dashscope':
-        console.log('🌊 Alibaba Cloud DashScope Adapter: Initializing...');
-        return new DashscopeContentGenerator();
         
              case 'ollama':
                console.log('🦙 Ollama Local AI Adapter: Initializing...');
                return new OllamaContentGenerator();
                
              case 'glm':
-               console.log('🧠 智谱AI GLM Adapter: Initializing...');
+               console.log('🧠 Zhipu AI GLM Adapter: Initializing...');
                return new GlmContentGenerator();
                
              case 'bailian':
-               console.log('🌊 阿里云百炼 Adapter: Initializing...');
+               console.log('🌊 Alibaba Cloud Bailian Adapter: Initializing...');
                return new BailianContentGenerator();
                
              case 'openai':
@@ -91,40 +92,40 @@ export class ContentGeneratorFactory {
   }
 
   /**
-   * 获取当前配置的引擎类型
-   * @returns 当前引擎类型
+   * Gets the currently configured engine type
+   * @returns Current engine type
    */
   static getCurrentEngine(): AiEngine {
     return (process.env['AI_ENGINE'] || DEFAULT_AI_ENGINE).toLowerCase() as AiEngine;
   }
 
   /**
-   * 检查指定的引擎是否受支持
-   * @param engine 引擎类型
-   * @returns 是否支持该引擎
+   * Checks if the specified engine is supported
+   * @param engine Engine type
+   * @returns Whether the engine is supported
    */
   static isEngineSupported(engine: string): boolean {
     return SUPPORTED_ENGINES.includes(engine.toLowerCase() as SupportedEngine);
   }
 
   /**
-   * 获取所有支持的引擎列表
-   * @returns 支持的引擎列表
+   * Gets all supported engine list
+   * @returns List of supported engines
    */
   static getSupportedEngines(): SupportedEngine[] {
     return [...SUPPORTED_ENGINES];
   }
 
   /**
-   * 获取所有可用的引擎列表（包括未实现的）
-   * @returns 所有引擎列表
+   * Gets all available engine list (including unimplemented)
+   * @returns List of all engines
    */
   static getAllEngines(): AllEngine[] {
     return [...ALL_ENGINES];
   }
 
   /**
-   * 打印引擎状态信息
+   * Prints engine status information
    */
   static printEngineStatus(): void {
     console.log('🔧 Multi-Engine Status:');
@@ -135,9 +136,9 @@ export class ContentGeneratorFactory {
 }
 
 /**
- * 便捷的工厂函数，保持向后兼容
- * @param engineType 可选的引擎类型
- * @returns ContentGenerator实例
+ * Convenient factory function for backward compatibility
+ * @param engineType Optional engine type
+ * @returns ContentGenerator instance
  */
 export function createContentGenerator(engineType?: AiEngine): ContentGenerator {
   return ContentGeneratorFactory.createContentGenerator(engineType);

@@ -4,6 +4,11 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+/**
+ * @author chameleon-nexus
+ * @email mythicscribe2014@gmail.com
+ */
+
 import type {
   CountTokensParameters,
   CountTokensResponse,
@@ -15,8 +20,8 @@ import type {
 import type { ContentGenerator } from './contentGenerator.js';
 
 /**
- * 阿里云百炼 ContentGenerator implementation
- * 支持通过阿里云百炼服务访问通义千问系列模型
+ * Alibaba Cloud Bailian ContentGenerator implementation
+ * Supports accessing Qwen series models through Alibaba Cloud Bailian service
  */
 export class BailianContentGenerator implements ContentGenerator {
   private readonly baseUrl: string;
@@ -24,17 +29,17 @@ export class BailianContentGenerator implements ContentGenerator {
   private readonly model: string;
 
   constructor() {
-    // 统一环境变量支持，优先使用通用变量，fallback到引擎特定变量
+    // Unified environment variable support, prioritize generic variables, fallback to engine-specific variables
     this.baseUrl = process.env['AI_BASE_URL'] || process.env['BAILIAN_BASE_URL'] || 'https://dashscope.aliyuncs.com/compatible-mode/v1';
     this.apiKey = process.env['AI_API_KEY'] || process.env['DASHSCOPE_API_KEY'] || process.env['ALIBABA_CLOUD_API_KEY'] || process.env['BAILIAN_API_KEY'] || (() => {
       throw new Error('API key not found. Please set one of: AI_API_KEY, DASHSCOPE_API_KEY, ALIBABA_CLOUD_API_KEY, or BAILIAN_API_KEY environment variable.');
     })();
     this.model = process.env['AI_MODEL'] || process.env['BAILIAN_MODEL'] || 'qwen-plus';
     
-    console.log('🌊 阿里云百炼 ContentGenerator: Initialized successfully');
+    console.log('🌊 Alibaba Cloud Bailian ContentGenerator: Initialized successfully');
     console.log(`   Model: ${this.model}`);
     console.log(`   API Endpoint: ${this.baseUrl}`);
-    console.log(`   Provider: 阿里云百炼 (Alibaba Cloud Bailian)`);
+    console.log(`   Provider: Alibaba Cloud Bailian`);
   }
 
   async generateContent(

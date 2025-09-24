@@ -4,6 +4,11 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+/**
+ * @author chameleon-nexus
+ * @email mythicscribe2014@gmail.com
+ */
+
 import type {
   CountTokensParameters,
   CountTokensResponse,
@@ -15,8 +20,8 @@ import type {
 import type { ContentGenerator } from './contentGenerator.js';
 
 /**
- * 智谱AI GLM ContentGenerator implementation
- * 支持通过智谱AI官方API访问GLM系列模型
+ * Zhipu AI GLM ContentGenerator implementation
+ * Supports accessing GLM series models through Zhipu AI official API
  */
 export class GlmContentGenerator implements ContentGenerator {
   private readonly baseUrl: string;
@@ -24,17 +29,17 @@ export class GlmContentGenerator implements ContentGenerator {
   private readonly model: string;
 
   constructor() {
-    // 统一环境变量支持，优先使用引擎特定变量，fallback到通用变量
+    // Unified environment variable support, prioritize engine-specific variables, fallback to generic variables
     this.baseUrl = process.env['GLM_BASE_URL'] || process.env['AI_BASE_URL'] || 'https://open.bigmodel.cn/api/paas/v4';
     this.apiKey = process.env['GLM_API_KEY'] || process.env['ZHIPU_API_KEY'] || process.env['AI_API_KEY'] || (() => {
       throw new Error('API key not found. Please set one of: GLM_API_KEY, ZHIPU_API_KEY, or AI_API_KEY environment variable.');
     })();
     this.model = process.env['GLM_MODEL'] || process.env['AI_MODEL'] || 'glm-4';
     
-    console.log('🧠 智谱AI GLM ContentGenerator: Initialized successfully');
+    console.log('🧠 Zhipu AI GLM ContentGenerator: Initialized successfully');
     console.log(`   Model: ${this.model}`);
     console.log(`   API Endpoint: ${this.baseUrl}`);
-    console.log(`   Provider: 智谱AI (Zhipu AI)`);
+    console.log(`   Provider: Zhipu AI`);
   }
 
   async generateContent(

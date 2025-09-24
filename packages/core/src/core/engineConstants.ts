@@ -5,30 +5,32 @@
  */
 
 /**
- * AI引擎相关常量定义
- * 统一管理默认值和配置，避免硬编码
+ * @author chameleon-nexus
+ * @email mythicscribe2014@gmail.com
+ * 
+ * AI Engine Constants Definition
+ * Unified management of default values and configurations to avoid hardcoding
  */
 
 /**
- * 默认AI引擎
+ * Default AI Engine
  */
 export const DEFAULT_AI_ENGINE = 'volcengine';
 
 /**
- * 已实现并支持的AI引擎列表
+ * List of implemented and supported AI engines
  */
 export const SUPPORTED_ENGINES = [
   'volcengine',
   'openrouter', 
   'azure',
-  'dashscope',
   'glm',
   'bailian',
   'ollama'
 ] as const;
 
 /**
- * 所有计划支持的AI引擎列表（包括未实现的）
+ * List of all planned supported AI engines (including unimplemented)
  */
 export const ALL_ENGINES = [
   ...SUPPORTED_ENGINES,
@@ -39,19 +41,19 @@ export const ALL_ENGINES = [
 ] as const;
 
 /**
- * 引擎类型定义
+ * Engine type definitions
  */
 export type SupportedEngine = typeof SUPPORTED_ENGINES[number];
 export type AllEngine = typeof ALL_ENGINES[number];
 
 /**
- * 引擎配置默认值
+ * Engine configuration defaults
  */
 export const ENGINE_DEFAULTS = {
   volcengine: {
     baseUrl: 'https://ark.cn-beijing.volces.com/api/v3',
     model: 'deepseek-v3-250324',
-    apiKeyEnv: ['VOLCENGINE_API_KEY', 'GEMINI_API_KEY'] // 支持多个环境变量作为fallback
+    apiKeyEnv: ['VOLCENGINE_API_KEY', 'GEMINI_API_KEY'] // Support multiple environment variables as fallback
   },
   openrouter: {
     baseUrl: 'https://openrouter.ai/api/v1',
@@ -59,15 +61,10 @@ export const ENGINE_DEFAULTS = {
     apiKeyEnv: ['OPENROUTER_API_KEY']
   },
   azure: {
-    baseUrl: '', // 必须由用户提供
+    baseUrl: '', // Must be provided by user
     model: 'gpt-4',
     apiVersion: '2024-02-15-preview',
     apiKeyEnv: ['AZURE_API_KEY']
-  },
-  dashscope: {
-    baseUrl: 'https://dashscope.aliyuncs.com/api/v1',
-    model: 'qwen-plus',
-    apiKeyEnv: ['DASHSCOPE_API_KEY', 'ALIBABA_CLOUD_API_KEY']
   },
   glm: {
     baseUrl: 'https://open.bigmodel.cn/api/paas/v4',
@@ -82,19 +79,19 @@ export const ENGINE_DEFAULTS = {
   ollama: {
     baseUrl: 'http://localhost:11434',
     model: 'llama3.2:latest',
-    apiKeyEnv: [] // Ollama不需要API key
+    apiKeyEnv: [] // Ollama doesn't need API key
   }
 } as const;
 
 /**
- * 需要API密钥的引擎列表
+ * List of engines that require API keys
  */
 export const ENGINES_REQUIRING_API_KEY = SUPPORTED_ENGINES.filter(engine => 
   ENGINE_DEFAULTS[engine]?.apiKeyEnv?.length > 0
 );
 
 /**
- * 需要Base URL的引擎列表
+ * List of engines that require Base URL
  */
 export const ENGINES_REQUIRING_BASE_URL = SUPPORTED_ENGINES.filter(engine => {
   const defaults = ENGINE_DEFAULTS[engine];
