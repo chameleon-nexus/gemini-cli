@@ -21,6 +21,7 @@ interface TipsProps {
 export const Tips: React.FC<TipsProps> = ({ config }) => {
   const geminiMdFileCount = config.getGeminiMdFileCount();
   const language = process.env['AI_LANG'] || process.env['LANG'] || 'en';
+  const currentModel = process.env['AI_MODEL'] || 'unknown';
   
   const renderTips = () => {
     switch (language) {
@@ -29,6 +30,7 @@ export const Tips: React.FC<TipsProps> = ({ config }) => {
         return (
           <>
             <Text color={theme.text.primary}>CatalystAI 是由 chameleon-nexus 发布的中文 CLI，支持国产 AI 模型和本地离线模型，联系方式：mythicscribe2014@gmail.com</Text>
+            <Text color={theme.text.secondary}>当前模型: {currentModel}</Text>
             <Text color={theme.text.primary}>使用提示：</Text>
             <Text color={theme.text.primary}>
               1. 提问、编辑文件或运行命令。
@@ -59,6 +61,7 @@ export const Tips: React.FC<TipsProps> = ({ config }) => {
       case 'de_DE':
         return (
           <>
+            <Text color={theme.text.secondary}>Aktuelles Modell: {currentModel}</Text>
             <Text color={theme.text.primary}>Tipps für den Einstieg:</Text>
             <Text color={theme.text.primary}>
               1. Stellen Sie Fragen, bearbeiten Sie Dateien oder führen Sie Befehle aus.
@@ -89,6 +92,7 @@ export const Tips: React.FC<TipsProps> = ({ config }) => {
       case 'vi_VN':
         return (
           <>
+            <Text color={theme.text.secondary}>Mô hình hiện tại: {currentModel}</Text>
             <Text color={theme.text.primary}>Mẹo để bắt đầu:</Text>
             <Text color={theme.text.primary}>
               1. Đặt câu hỏi, chỉnh sửa tệp hoặc chạy lệnh.
@@ -119,6 +123,7 @@ export const Tips: React.FC<TipsProps> = ({ config }) => {
       case 'ar_SA':
         return (
           <>
+            <Text color={theme.text.secondary}>النموذج الحالي: {currentModel}</Text>
             <Text color={theme.text.primary}>نصائح للبدء:</Text>
             <Text color={theme.text.primary}>
               1. اطرح الأسئلة أو عدّل الملفات أو نفّذ الأوامر.
@@ -148,6 +153,7 @@ export const Tips: React.FC<TipsProps> = ({ config }) => {
       default:
         return (
           <>
+            <Text color={theme.text.secondary}>Current Model: {currentModel}</Text>
             <Text color={theme.text.primary}>Tips for getting started:</Text>
             <Text color={theme.text.primary}>
               1. Ask questions, edit files, or run commands.
