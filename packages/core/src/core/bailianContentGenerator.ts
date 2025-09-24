@@ -151,9 +151,9 @@ export class BailianContentGenerator implements ContentGenerator {
   }
 
   async countTokens(request: CountTokensParameters): Promise<CountTokensResponse> {
-    // 阿里云百炼不提供独立的token计算接口，使用估算方式
+    // Alibaba Cloud Bailian doesn't provide independent token calculation interface, using estimation method
     const text = this.extractTextFromRequest(request);
-    const estimatedTokens = Math.ceil(text.length / 4); // 粗略估算：4个字符约等于1个token
+    const estimatedTokens = Math.ceil(text.length / 4); // Rough estimation: 4 characters approximately equal to 1 token
 
     return {
       totalTokens: estimatedTokens,
@@ -167,7 +167,7 @@ export class BailianContentGenerator implements ContentGenerator {
   private convertGeminiToBailian(request: any): any {
     const messages = [];
     
-    // 处理系统消息和用户消息
+    // Handle system messages and user messages
     if (request.contents) {
       for (const content of request.contents) {
         if (content.role === 'user') {
@@ -192,7 +192,7 @@ export class BailianContentGenerator implements ContentGenerator {
       stream: false,
     };
 
-    // 处理生成配置
+    // Handle generation configuration
     if (request.generationConfig) {
       const config = request.generationConfig;
       if (config.temperature !== undefined) {
@@ -206,7 +206,7 @@ export class BailianContentGenerator implements ContentGenerator {
       }
     }
 
-    // 处理工具调用
+    // Handle tool calls
     if (request.tools && request.tools.length > 0) {
       bailianRequest.tools = request.tools.map((tool: any) => ({
         type: 'function',
@@ -309,7 +309,7 @@ export class BailianContentGenerator implements ContentGenerator {
   }
 
   private extractTextFromRequest(request: CountTokensParameters): string {
-    // 使用JSON.stringify来简单估算，避免复杂的类型处理
+    // Use JSON.stringify for simple estimation, avoiding complex type handling
     const content = JSON.stringify(request.contents);
     return content;
   }
