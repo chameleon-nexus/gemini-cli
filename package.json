@@ -1,6 +1,6 @@
 {
   "name": "@chameleon-nexus-tech/gemini-cli",
-  "version": "1.0.3",
+  "version": "1.1.0",
   "engines": {
     "node": ">=20.0.0"
   },
