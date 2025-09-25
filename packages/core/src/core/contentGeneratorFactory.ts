@@ -15,6 +15,7 @@ import { OpenrouterContentGenerator } from './openrouterContentGenerator.js';
 import { AzureContentGenerator } from './azureContentGenerator.js';
 import { OllamaContentGenerator } from './ollamaContentGenerator.js';
 import { GlmContentGenerator } from './glmContentGenerator.js';
+import type { ToolExecutor } from './glmContentGenerator.js';
 import { BailianContentGenerator } from './bailianContentGenerator.js';
 import { 
   DEFAULT_AI_ENGINE, 
@@ -39,9 +40,10 @@ export class ContentGeneratorFactory {
   /**
    * Creates and returns a ContentGenerator instance based on environment variables
    * @param engineType Optional engine type, if not provided, reads from environment variables
+   * @param toolExecutors Optional tool executors for function calling (currently only for GLM)
    * @returns ContentGenerator instance
    */
-  static createContentGenerator(engineType?: AiEngine): ContentGenerator {
+  static createContentGenerator(engineType?: AiEngine, toolExecutors?: ToolExecutor): ContentGenerator {
     // Prioritize passed parameters, then environment variables, finally default values
     const engine = (engineType || process.env['AI_ENGINE'] || DEFAULT_AI_ENGINE).toLowerCase() as AiEngine;
 
@@ -67,7 +69,7 @@ export class ContentGeneratorFactory {
                
              case 'glm':
                console.log('🧠 Zhipu AI GLM Adapter: Initializing...');
-               return new GlmContentGenerator();
+               return new GlmContentGenerator(toolExecutors || {});
                
              case 'bailian':
                console.log('🌊 Alibaba Cloud Bailian Adapter: Initializing...');
@@ -138,8 +140,9 @@ export class ContentGeneratorFactory {
 /**
  * Convenient factory function for backward compatibility
  * @param engineType Optional engine type
+ * @param toolExecutors Optional tool executors for function calling
  * @returns ContentGenerator instance
  */
-export function createContentGenerator(engineType?: AiEngine): ContentGenerator {
-  return ContentGeneratorFactory.createContentGenerator(engineType);
+export function createContentGenerator(engineType?: AiEngine, toolExecutors?: ToolExecutor): ContentGenerator {
+  return ContentGeneratorFactory.createContentGenerator(engineType, toolExecutors);
 }

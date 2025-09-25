@@ -139,7 +139,13 @@ export async function createContentGenerator(
       throw new Error(`不支持的AI引擎: ${engine}。支持的引擎: ${ContentGeneratorFactory.getSupportedEngines().join(', ')}`);
     }
     
-    const contentGenerator = ContentGeneratorFactory.createContentGenerator(engine as AiEngine);
+    // 为GLM引擎配置（但不注册额外工具，使用Gemini原生工具）
+    let toolExecutors = undefined;
+    if (engine === 'glm') {
+      console.log(`🔧 GLM引擎：将使用Gemini原生工具库，GLM作为规划大脑`);
+    }
+    
+    const contentGenerator = ContentGeneratorFactory.createContentGenerator(engine as AiEngine, toolExecutors);
     return new LoggingContentGenerator(contentGenerator, gcConfig);
   }
   throw new Error(
