@@ -139,10 +139,12 @@ export async function createContentGenerator(
       throw new Error(`不支持的AI引擎: ${engine}。支持的引擎: ${ContentGeneratorFactory.getSupportedEngines().join(', ')}`);
     }
     
-    // 为GLM引擎配置（但不注册额外工具，使用Gemini原生工具）
+    // GLM引擎配置：不传递工具执行器，让GLM使用Gemini原生工具系统
     let toolExecutors = undefined;
     if (engine === 'glm') {
-      console.log(`🔧 GLM引擎：将使用Gemini原生工具库，GLM作为规划大脑`);
+      console.log(`🔧 GLM引擎：将使用Gemini原生工具系统，获得完整UI交互体验`);
+      // 明确传递undefined，确保GLM不使用自己的默认工具执行器
+      toolExecutors = undefined;
     }
     
     const contentGenerator = ContentGeneratorFactory.createContentGenerator(engine as AiEngine, toolExecutors);

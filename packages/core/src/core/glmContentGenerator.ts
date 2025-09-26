@@ -28,12 +28,6 @@ export type ToolExecutor = {
   [functionName: string]: (...args: any[]) => Promise<any> | any;
 };
 
-// 工具执行结果类型
-type ToolExecutionResult = {
-  success: boolean;
-  result?: any;
-  error?: string;
-};
 
 type GlmTool = {
   type: 'function';
@@ -91,25 +85,20 @@ export class GlmContentGenerator implements ContentGenerator {
   private readonly baseUrl: string;
   private readonly apiKey: string;
   private readonly model: string;
-  private readonly toolExecutors: ToolExecutor;
 
-  constructor(toolExecutors: ToolExecutor = {}) {
+  constructor(toolExecutors?: ToolExecutor) {
     // Unified environment variable support, prioritize engine-specific variables, fallback to generic variables
     this.baseUrl = process.env['GLM_BASE_URL'] || process.env['AI_BASE_URL'] || 'https://open.bigmodel.cn/api/paas/v4';
     this.apiKey = process.env['GLM_API_KEY'] || process.env['ZHIPU_API_KEY'] || process.env['AI_API_KEY'] || (() => {
       throw new Error('API key not found. Please set one of: GLM_API_KEY, ZHIPU_API_KEY, or AI_API_KEY environment variable.');
     })();
     this.model = process.env['GLM_MODEL'] || process.env['AI_MODEL'] || 'glm-4';
-    this.toolExecutors = toolExecutors;
     
     console.log('🧠 Zhipu AI GLM ContentGenerator: Initialized successfully');
     console.log(`   Model: ${this.model}`);
     console.log(`   API Endpoint: ${this.baseUrl}`);
     console.log(`   Provider: Zhipu AI`);
-    console.log(`   Available Tools: ${Object.keys(toolExecutors).length} functions`);
-    if (Object.keys(toolExecutors).length > 0) {
-      console.log(`   - ${Object.keys(toolExecutors).join(', ')}`);
-    }
+    console.log(`   Tool Execution: 依赖Gemini原生工具系统 (获得UI交互体验)`);
   }
 
   async generateContent(
@@ -221,192 +210,8 @@ export class GlmContentGenerator implements ContentGenerator {
     throw new Error('Embedding not supported by GLM implementation');
   }
 
-  /**
-   * 执行函数调用
-   * @param functionCall 函数调用信息
-   * @returns 执行结果
-   */
-  private async executeFunctionCall(functionCall: FunctionCall): Promise<ToolExecutionResult> {
-    const { name, args } = functionCall;
-    
-    console.log(`🔧 执行工具调用: ${name}`, args);
-    
-    try {
-      // 安全检查：函数名验证
-      if (!name || typeof name !== 'string') {
-        const error = '无效的函数名';
-        console.error(`❌ ${error}:`, name);
-        return { success: false, error };
-      }
 
-      // 安全检查：函数名长度限制
-      if (name.length > 100) {
-        const error = '函数名过长，可能存在安全风险';
-        console.error(`❌ ${error}:`, name);
-        return { success: false, error };
-      }
 
-      // 安全检查：函数名只能包含字母、数字、下划线
-      if (!/^[a-zA-Z_][a-zA-Z0-9_]*$/.test(name)) {
-        const error = '函数名包含非法字符';
-        console.error(`❌ ${error}:`, name);
-        return { success: false, error };
-      }
-
-      const executor = this.toolExecutors[name];
-      if (!executor) {
-        const error = `工具 "${name}" 未找到可用的执行器`;
-        console.error(`❌ ${error}`);
-        return { success: false, error };
-      }
-
-      if (typeof executor !== 'function') {
-        const error = `工具 "${name}" 的执行器不是有效函数`;
-        console.error(`❌ ${error}`);
-        return { success: false, error };
-      }
-
-      // 参数安全检查
-      const safeArgs = this.validateFunctionArgs(args);
-      if (!safeArgs.valid) {
-        console.error(`❌ 工具 "${name}" 参数验证失败:`, safeArgs.error);
-        return { success: false, error: safeArgs.error };
-      }
-
-      // 设置执行超时
-      const timeoutMs = 30000; // 30秒超时
-      const timeoutPromise = new Promise<never>((_, reject) => {
-        setTimeout(() => reject(new Error(`工具 "${name}" 执行超时 (${timeoutMs}ms)`)), timeoutMs);
-      });
-
-      // 执行工具函数（带超时控制）
-      const executionPromise = executor(safeArgs.args || {});
-      const result = await Promise.race([executionPromise, timeoutPromise]);
-      
-      console.log(`✅ 工具 "${name}" 执行成功:`, result);
-      
-      return { success: true, result };
-    } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : String(error);
-      console.error(`❌ 工具 "${name}" 执行失败:`, errorMessage);
-      
-      // 记录详细错误信息（用于调试）
-      if (error instanceof Error && error.stack) {
-        console.debug(`工具 "${name}" 错误堆栈:`, error.stack);
-      }
-      
-      return { success: false, error: errorMessage };
-    }
-  }
-
-  /**
-   * 验证函数参数的安全性
-   * @param args 函数参数
-   * @returns 验证结果
-   */
-  private validateFunctionArgs(args: any): { valid: boolean; args?: any; error?: string } {
-    try {
-      // 检查参数是否存在
-      if (args === undefined || args === null) {
-        return { valid: true, args: {} };
-      }
-
-      // 检查参数类型
-      if (typeof args !== 'object' || Array.isArray(args)) {
-        return { valid: false, error: '参数必须是对象类型' };
-      }
-
-      // 检查参数深度（防止过深的嵌套）
-      const maxDepth = 10;
-      if (!this.checkObjectDepth(args, maxDepth)) {
-        return { valid: false, error: `参数嵌套层级超过 ${maxDepth} 层` };
-      }
-
-      // 检查JSON序列化大小（防止过大的参数）
-      const jsonString = JSON.stringify(args);
-      const maxSize = 1024 * 1024; // 1MB
-      if (jsonString.length > maxSize) {
-        return { valid: false, error: `参数大小超过 ${maxSize} 字符` };
-      }
-
-      // 检查危险属性（基础安全过滤）
-      const dangerousKeys = ['__proto__', 'constructor', 'prototype'];
-      if (this.containsDangerousKeys(args, dangerousKeys)) {
-        return { valid: false, error: '参数包含危险属性' };
-      }
-
-      return { valid: true, args };
-    } catch (error) {
-      return { valid: false, error: `参数验证失败: ${error instanceof Error ? error.message : String(error)}` };
-    }
-  }
-
-  /**
-   * 检查对象嵌套深度
-   * @param obj 要检查的对象
-   * @param maxDepth 最大深度
-   * @param currentDepth 当前深度
-   * @returns 是否在允许的深度内
-   */
-  private checkObjectDepth(obj: any, maxDepth: number, currentDepth: number = 0): boolean {
-    if (currentDepth > maxDepth) {
-      return false;
-    }
-
-    if (typeof obj === 'object' && obj !== null && !Array.isArray(obj)) {
-      for (const value of Object.values(obj)) {
-        if (typeof value === 'object' && value !== null) {
-          if (!this.checkObjectDepth(value, maxDepth, currentDepth + 1)) {
-            return false;
-          }
-        }
-      }
-    }
-
-    return true;
-  }
-
-  /**
-   * 检查对象是否包含危险属性
-   * @param obj 要检查的对象
-   * @param dangerousKeys 危险属性列表
-   * @returns 是否包含危险属性
-   */
-  private containsDangerousKeys(obj: any, dangerousKeys: string[]): boolean {
-    if (typeof obj !== 'object' || obj === null) {
-      return false;
-    }
-
-    for (const key of Object.keys(obj)) {
-      if (dangerousKeys.includes(key)) {
-        return true;
-      }
-
-      if (typeof obj[key] === 'object' && obj[key] !== null) {
-        if (this.containsDangerousKeys(obj[key], dangerousKeys)) {
-          return true;
-        }
-      }
-    }
-
-    return false;
-  }
-
-  /**
-   * 批量执行多个函数调用
-   * @param functionCalls 函数调用列表
-   * @returns 执行结果列表
-   */
-  private async executeFunctionCalls(functionCalls: FunctionCall[]): Promise<ToolExecutionResult[]> {
-    const results: ToolExecutionResult[] = [];
-    
-    for (const call of functionCalls) {
-      const result = await this.executeFunctionCall(call);
-      results.push(result);
-    }
-    
-    return results;
-  }
 
   private buildGlmRequestPayload(
     request: GenerateContentParameters,
@@ -560,34 +365,11 @@ export class GlmContentGenerator implements ContentGenerator {
         console.log(`📋 工具调用: ${call.name}`, call.args);
       }
 
-      // 如果启用了工具执行，则自动执行工具调用
-      if (executeTools && Object.keys(this.toolExecutors).length > 0) {
-        console.log('🚀 开始执行工具调用...');
-        const executionResults = await this.executeFunctionCalls(functionCalls);
-        
-        // 将执行结果添加到parts中
-        for (let i = 0; i < functionCalls.length; i++) {
-          const call = functionCalls[i];
-          const result = executionResults[i];
-          
-          if (result) {
-            parts.push({
-              functionResponse: {
-                id: call.id,
-                name: call.name,
-                response: {
-                  success: result.success,
-                  result: result.result,
-                  error: result.error,
-                  timestamp: new Date().toISOString()
-                }
-              }
-            });
-          }
-        }
-        
-        console.log('✅ 工具执行完成');
-      }
+      // GLM不自己执行工具，而是返回FunctionCall给Gemini原生工具系统处理
+      console.log('📤 GLM将工具调用返回给Gemini原生工具系统处理');
+      
+      // 注意：我们只返回functionCall parts，让Gemini原生工具系统来执行
+      // 这样就能获得UI交互体验（确认对话框、结果显示等）
     }
 
     const textContent = this.extractAssistantText(message.content);
@@ -722,34 +504,8 @@ export class GlmContentGenerator implements ContentGenerator {
           parts.push({ functionCall: call });
         }
 
-        // 执行工具调用
-        if (Object.keys(this.toolExecutors).length > 0) {
-          console.log('🚀 流式模式：开始执行工具调用...');
-          const executionResults = await this.executeFunctionCalls(functionCalls);
-          
-          // 添加执行结果
-          for (let i = 0; i < functionCalls.length; i++) {
-            const call = functionCalls[i];
-            const result = executionResults[i];
-            
-            if (result) {
-              parts.push({
-                functionResponse: {
-                  id: call.id,
-                  name: call.name,
-                  response: {
-                    success: result.success,
-                    result: result.result,
-                    error: result.error,
-                    timestamp: new Date().toISOString()
-                  }
-                }
-              });
-            }
-          }
-          
-          console.log('✅ 流式模式：工具执行完成');
-        }
+        // GLM流式模式：将工具调用返回给Gemini原生工具系统处理
+        console.log('📤 流式模式：GLM将工具调用返回给Gemini原生工具系统处理');
 
         // 输出工具调用结果
         yield {

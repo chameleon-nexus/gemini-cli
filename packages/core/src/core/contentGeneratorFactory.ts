@@ -69,7 +69,7 @@ export class ContentGeneratorFactory {
                
              case 'glm':
                console.log('🧠 Zhipu AI GLM Adapter: Initializing...');
-               return new GlmContentGenerator(toolExecutors || {});
+               return new GlmContentGenerator(toolExecutors);
                
              case 'bailian':
                console.log('🌊 Alibaba Cloud Bailian Adapter: Initializing...');
